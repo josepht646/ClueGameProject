@@ -72,13 +72,19 @@ public class IntBoard {
 	 * @param i
 	 */
 	public void calcTargets(BoardCell cell, int i) {
+		targets.clear();
+		visited.clear();
+		findAllTargets(cell, i);
+	}
+	
+	private void findAllTargets(BoardCell cell, int i) {
 		for (BoardCell myCell : adjMtx.get(cell)) {
 			if (!visited.contains(myCell)) {
 				visited.add(myCell);
 				if (i == 1) {
 					targets.add(myCell);
 				} else {
-					calcTargets(myCell, i - 1);
+					findAllTargets(myCell, i - 1);
 				}
 				visited.remove(myCell);
 			}
