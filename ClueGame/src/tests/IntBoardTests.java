@@ -1,7 +1,4 @@
 package tests;
-
-
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -13,14 +10,27 @@ import org.junit.Test;
 import experiment.BoardCell;
 import experiment.IntBoard;
 
+/**
+ * Tests the IntBoard and BoardCell classes.
+ * 
+ * @author Joseph Thurston
+ * @author Thomas Depke
+ *
+ */
 public class IntBoardTests {
 	private IntBoard board;
 	@Before
+	/**
+	 * Allocate space for the IntBoard before tests.
+	 */
 	public void beforeAll() {
 		board = new IntBoard();
 	}
 	
 	@Test
+	/**
+	 * Test the adjacency list building.
+	 */
 	public void testAdjacency0()
 	{
 		BoardCell cell = board.getCell(0,0);
@@ -31,6 +41,9 @@ public class IntBoardTests {
 	}
 	
 	@Test
+	/**
+	 * Test the target list builder.
+	 */
 	public void testTargets0_3() {
 		BoardCell cell = board.getCell(0,0);
 		board.calcTargets(cell, 3);
