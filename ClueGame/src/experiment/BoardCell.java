@@ -4,6 +4,7 @@ public class BoardCell {
 	private int row;
 	private int column;
 	
+	
 	public BoardCell() {
 		super();
 		row = 0;
@@ -15,5 +16,20 @@ public class BoardCell {
 		this.column = column;
 	}
 	
-	
+	public void setRow(int row) {
+		this.row = row;
+	}
+
+	public void setColumn(int column) {
+		this.column = column;
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public int getColumn() {
+		return column;
+	}
+
 }
