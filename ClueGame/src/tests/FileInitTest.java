@@ -111,11 +111,14 @@ public class FileInitTest {
 	 * Ensure cells correspond to assigned rooms.
 	 */
 	public void testRoomInitials() {
-		assertEquals('C', board.getCellAt(0, 0).getInitial());
+		assertEquals('C', board.getCellAt(0, 0).getInitial()); //Test top left corner.
+		assertEquals('B', board.getCellAt(22, 21).getInitial()); //Test bottom right corner.
+		assertEquals('V', board.getCellAt(22, 0).getInitial()); //Test bottom left corner.
+		assertEquals('I', board.getCellAt(0, 21).getInitial()); //Test top right corner.
+		//Random cells:
 		assertEquals('A', board.getCellAt(4, 8).getInitial());
 		assertEquals('L', board.getCellAt(9, 0).getInitial());
-		assertEquals('B', board.getCellAt(22, 21).getInitial());
-		assertEquals('V', board.getCellAt(22, 0).getInitial());
+		//Walkway and Dumbwaiter:
 		assertEquals('W', board.getCellAt(14, 14).getInitial());
 		assertEquals('K', board.getCellAt(10,10).getInitial());
 	}

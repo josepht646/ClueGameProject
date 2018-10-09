@@ -1,0 +1,24 @@
+Authors: Joseph Thurston, Thomas Depke
+Legend Testing:
+We decided to test the entire legend.
+
+Door Direction Testing:
+We tested a door in each direction.
+The Bank Vault has a door that opens up.
+The Cave has a door that opens right.
+The Lake has a door that opens down.
+The Attic has a door that opens left.
+We tested that a cell in a room (Dumbwaiter) was not a door.
+We also tested to make sure the Walkway was not a door.
+
+Number of doorways:
+We tested that the total number of doorways was
+equal to the number of doorways in our CSV file
+(12 in our case).
+
+Room initial test:
+We decided to test the corners of our board
+to both ensure the correct room label assignment
+and that the entire board was read into the Set.
+We also tested random cells in our board to make
+sure that they corresponded to the correct room label.
