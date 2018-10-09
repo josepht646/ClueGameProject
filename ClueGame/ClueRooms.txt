@@ -1,0 +1,11 @@
+C, Court Yard, Card
+A, Attic, Card
+D, Dungeon, Card
+T, Tower, Card
+V, Cave, Card
+L, Lake, Card
+Q, Queen's Bedroom, Card
+B, Bank Vault, Card
+I, Internet Chat room, Card
+K, Dumbwaiter, Other
+W, Walkway, Other
