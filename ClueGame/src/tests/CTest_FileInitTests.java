@@ -81,7 +81,7 @@ public class CTest_FileInitTests {
 		assertFalse(room.isDoorway());	
 		// Test that walkways are not doors
 		BoardCell cell = board.getCellAt(0, 6);
-		assertFalse(cell.isDoorway());		
+		assertFalse(cell.isDoorway());
 
 	}
 	

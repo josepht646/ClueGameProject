@@ -1,7 +1,7 @@
 package clueGame;
 
 /**
- * The BoardCell class represents a cell in a board with row and column.
+ * The BoardCell class represents a cell in a board with row, column, label, and door direction.
  * 
  * @author Joseph Thurston
  * @author Thomas Depke
@@ -11,6 +11,7 @@ public class BoardCell {
 	private int row;
 	private int column;
 	private char initial;
+	private DoorDirection doorDir;
 	
 	/**
 	 * Construct the cell with zeros.
@@ -19,16 +20,22 @@ public class BoardCell {
 		super();
 		row = 0;
 		column = 0;
+		initial = '\0';
+		doorDir = DoorDirection.NONE;
 	}
 	
 	/**
-	 * Construct the cell with specific row and column.
+	 * Construct the cell with specific row, column, label, and door direction
 	 * @param row
 	 * @param column
+	 * @param initial
+	 * @param doorDir
 	 */
-	public BoardCell(int row, int column) {
+	public BoardCell(int row, int column, char initial, DoorDirection doorDir) {
 		this.row = row;
 		this.column = column;
+		this.initial = initial;
+		this.doorDir = doorDir;
 	}
 	
 	/**
@@ -67,21 +74,21 @@ public class BoardCell {
 	 * @return
 	 */
 	public boolean isDoorway() {
-		return false;
+		return doorDir != DoorDirection.NONE;
 	}
 	/**
 	 * Get Door Direction.
 	 * @return
 	 */
 	public DoorDirection getDoorDirection() {
-		return DoorDirection.NONE;
+		return doorDir;
 	}
 	/**
 	 * Get character representing board cell.
 	 * @return
 	 */
 	public char getInitial() {
-		return '0';
+		return initial;
 	}
 
 
