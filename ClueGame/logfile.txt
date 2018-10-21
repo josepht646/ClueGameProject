@@ -1,0 +1,1 @@
+CTest_ClueLegendBadFormat.txt is not correctly formatted.

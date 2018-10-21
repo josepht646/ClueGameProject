@@ -221,7 +221,7 @@ public class AdjacencyTargetTests {
 		targets = board.getTargets();
 		assertEquals(11, targets.size());
 		assertTrue(targets.contains(board.getCellAt(4, 6)));
-		assertTrue(targets.contains(board.getCellAt(4, 8)));
+		assertTrue(targets.contains(board.getCellAt(6, 6)));
 		assertTrue(targets.contains(board.getCellAt(5, 5)));
 		assertTrue(targets.contains(board.getCellAt(5, 7)));
 		assertTrue(targets.contains(board.getCellAt(3, 5)));

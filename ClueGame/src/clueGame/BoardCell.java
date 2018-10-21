@@ -12,6 +12,7 @@ public class BoardCell {
 	private int column;
 	private char initial;
 	private DoorDirection doorDir;
+	private boolean isWalkway;
 	
 	/**
 	 * Construct the cell with zeros.
@@ -22,6 +23,7 @@ public class BoardCell {
 		column = 0;
 		initial = '\0';
 		doorDir = DoorDirection.NONE;
+		isWalkway = false;
 	}
 	
 	/**
@@ -30,12 +32,14 @@ public class BoardCell {
 	 * @param column
 	 * @param initial
 	 * @param doorDir
+	 * @param isWalkway
 	 */
-	public BoardCell(int row, int column, char initial, DoorDirection doorDir) {
+	public BoardCell(int row, int column, char initial, DoorDirection doorDir, boolean isWalkway) {
 		this.row = row;
 		this.column = column;
 		this.initial = initial;
 		this.doorDir = doorDir;
+		this.isWalkway = isWalkway;
 	}
 	
 	/**
@@ -77,6 +81,14 @@ public class BoardCell {
 		return doorDir != DoorDirection.NONE;
 	}
 	/**
+	 * Test whether BoardCell is a walkway.
+	 * @return
+	 */
+	public boolean isWalkway() {
+		return isWalkway;
+	}
+	
+	/**
 	 * Get Door Direction.
 	 * @return
 	 */
@@ -90,7 +102,13 @@ public class BoardCell {
 	public char getInitial() {
 		return initial;
 	}
-
-
-
+	
+	/**
+	 * Get data for cell as a string.
+	 */
+	@Override
+	public String toString() {
+		return "BoardCell [row=" + row + ", column=" + column + ", initial=" + initial + ", doorDir=" + doorDir
+				+ ", isWalkway=" + isWalkway + "]";
+	}
 }

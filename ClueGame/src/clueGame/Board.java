@@ -22,6 +22,7 @@ public class Board {
 	private int numColumns;
 	private BoardCell[][] board;
 	private Map<Character, String> legend;
+	private char walkwayChar;
 	private Map<BoardCell, Set<BoardCell>> adjMatrix;
 	private Set<BoardCell> visited, targets;
 	private String boardConfigFile;
@@ -67,6 +68,9 @@ public class Board {
 				throw new BadConfigFormatException(roomConfigFile);
 			} else {
 				legend.put(entries[0].charAt(0), entries[1]);
+				if (entries[1].equals("Walkway")) {
+					walkwayChar = entries[0].charAt(0);
+				}
 			}
 		}
 		in.close();
@@ -110,29 +114,33 @@ public class Board {
 					throw new BadConfigFormatException(boardConfigFile);
 				}
 				if (entries[j].length() == 1) {
-					board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.NONE );
+					if (entries[j].charAt(0) == walkwayChar) {
+						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.NONE, true);
+					} else {
+						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.NONE, false);
+					}
 				} else if (entries[j].length() == 2) {
 					char dir = entries[j].charAt(1);
 					switch(dir) {
 					case 'R':
-						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.RIGHT );
+						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.RIGHT, false);
 					break;
 					case 'L':
-						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.LEFT );
+						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.LEFT, false);
 					break;
 					case 'U':
-						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.UP );
+						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.UP, false);
 					break;
 					case 'D':
-						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.DOWN );
+						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.DOWN, false);
 					break;
 					case 'N':
-						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.NONE );
+						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.NONE, false);
 					break;
 					default:
 						in.close();
 						throw new BadConfigFormatException(boardConfigFile);
-					} 
+					}
 				} else {
 					in.close();
 					throw new BadConfigFormatException(boardConfigFile);
@@ -153,40 +161,70 @@ public class Board {
 		for (int i = 0; i < board.length; ++i) {
 			for (int j = 0; j < board[i].length; ++j) {
 				adjMatrix.put(board[i][j], new HashSet<BoardCell>());
-				if (i - 1 >= 0) {
-					adjMatrix.get(board[i][j]).add(board[i - 1][j]);
+				if (!board[i][j].isWalkway() && !board[i][j].isDoorway()) {   // If cell is a room, no positions to move to.
+					continue;
 				}
-				if (j + 1 < board[i].length) {
-					adjMatrix.get(board[i][j]).add(board[i][j + 1]);
-				}
-				if (i + 1 < board.length) {
-					adjMatrix.get(board[i][j]).add(board[i + 1][j]);
-				}
-				if (j - 1 >= 0) {
-					adjMatrix.get(board[i][j]).add(board[i][j - 1]);
+				
+				if (board[i][j].isWalkway()) {    // If cell is walkway, can move to another walkway or enter door in correct direction.
+					if (i - 1 >= 0 && (board[i-1][j].isWalkway() || (board[i-1][j].isDoorway() && board[i-1][j].getDoorDirection() == DoorDirection.DOWN))) {
+						adjMatrix.get(board[i][j]).add(board[i - 1][j]);
+					}
+					if (j + 1 < board[i].length && (board[i][j+1].isWalkway() || (board[i][j+1].isDoorway() && board[i][j+1].getDoorDirection() == DoorDirection.LEFT))) {
+						adjMatrix.get(board[i][j]).add(board[i][j + 1]);
+					}
+					if (i + 1 < board.length && (board[i+1][j].isWalkway() || (board[i+1][j].isDoorway() && board[i+1][j].getDoorDirection() == DoorDirection.UP))) {
+						adjMatrix.get(board[i][j]).add(board[i + 1][j]);
+					}
+					if (j - 1 >= 0 && (board[i][j-1].isWalkway() || (board[i][j-1].isDoorway() && board[i][j-1].getDoorDirection() == DoorDirection.RIGHT))) {
+						adjMatrix.get(board[i][j]).add(board[i][j - 1]);
+					}
+				} else {    // Cell must be a door (we assume the cell in the door direction is a walkway).
+					switch(board[i][j].getDoorDirection()) {
+					case DOWN:
+						adjMatrix.get(board[i][j]).add(board[i + 1][j]);
+						break;
+					case LEFT:
+						adjMatrix.get(board[i][j]).add(board[i][j - 1]);
+						break;
+					case NONE:
+						break;
+					case RIGHT:
+						adjMatrix.get(board[i][j]).add(board[i][j + 1]);
+						break;
+					case UP:
+						adjMatrix.get(board[i][j]).add(board[i - 1][j]);
+						break;
+					default:
+						break;
+					}
 				}
 			}
 		}
 	}
 	/**
-	 * 
+	 * Calculate the targets list at cell with pathLength steps.
 	 * @param cell
 	 * @param pathLength
 	 */
 	public void calcTargets(BoardCell cell, int pathLength) {
 		targets.clear();
 		visited.clear();
-		findAllTargets(cell, pathLength);
+		visited.add(cell);
+		findAllTargets(cell, pathLength, cell.getInitial());
 	}
 	
-	private void findAllTargets(BoardCell cell, int i) {
+	private void findAllTargets(BoardCell cell, int i, char startingRoom) {
 		for (BoardCell myCell : adjMatrix.get(cell)) {
 			if (!visited.contains(myCell)) {
 				visited.add(myCell);
-				if (i == 1) {
+				if (myCell.isDoorway()) {
+					if (myCell.getInitial() != startingRoom) {
+						targets.add(myCell);
+					}
+				} else if (i == 1) {
 					targets.add(myCell);
 				} else {
-					findAllTargets(myCell, i - 1);
+					findAllTargets(myCell, i - 1, startingRoom);
 				}
 				visited.remove(myCell);
 			}
@@ -251,14 +289,26 @@ public class Board {
 	public BoardCell getCellAt(int i, int j) {
 		return board[i][j];
 	}
+	
+	/**
+	 * Get the adjacency list at row i column j.
+	 * @param i
+	 * @param j
+	 * @return
+	 */
 	public Set<BoardCell> getAdjList(int i, int j) {
-		// TODO Auto-generated method stub
-		HashSet<BoardCell> marker = new HashSet<BoardCell>();
-		marker.add(new BoardCell());
-		return marker;
+		
+		return getAdjList(getCellAt(i,j));
 	}
-	public void calcTargets(int i, int j, int k) {
-		// TODO Auto-generated method stub
+	
+	/**
+	 * Calculate the targets list at row i column j with pathLength steps.
+	 * @param i
+	 * @param j
+	 * @param pathLength
+	 */
+	public void calcTargets(int i, int j, int pathLength) {
+		calcTargets(getCellAt(i,j), pathLength);
 		
 	}
 
