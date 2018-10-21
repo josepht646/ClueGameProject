@@ -65,6 +65,7 @@ public class FileInitTest {
 	/**
 	 * Test whether door cells are in the proper direction based on
 	 * their formatting.
+	 * Color white in excel file.
 	 */
 	public void testDoorDirections() {
 		BoardCell room = board.getCellAt(16, 16);
