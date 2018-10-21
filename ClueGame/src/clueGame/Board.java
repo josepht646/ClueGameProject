@@ -251,5 +251,15 @@ public class Board {
 	public BoardCell getCellAt(int i, int j) {
 		return board[i][j];
 	}
+	public Set<BoardCell> getAdjList(int i, int j) {
+		// TODO Auto-generated method stub
+		HashSet<BoardCell> marker = new HashSet<BoardCell>();
+		marker.add(new BoardCell());
+		return marker;
+	}
+	public void calcTargets(int i, int j, int k) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
