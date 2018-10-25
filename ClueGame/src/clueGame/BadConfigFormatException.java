@@ -10,6 +10,10 @@ import java.io.PrintWriter;
  */
 public class BadConfigFormatException extends Exception {
 	/**
+	 * Exception Serial Version.
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * Default constructor writes to log file.
 	 */
 	public BadConfigFormatException() {
