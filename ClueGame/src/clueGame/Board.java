@@ -57,12 +57,12 @@ public class Board {
 	public void loadRoomConfig() throws BadConfigFormatException, FileNotFoundException {
 		legend = new HashMap<Character, String>();
 		FileReader reader = new FileReader(roomConfigFile);
-		Scanner in = new Scanner(reader);
-		while (in.hasNextLine()) {
-			String[] entries = in.nextLine().split(", ");
+		Scanner readerScanner = new Scanner(reader);
+		while (readerScanner.hasNextLine()) {
+			String[] entries = readerScanner.nextLine().split(", ");
 			if(entries.length != 3 || entries[0].length() != 1 || entries[1].length() == 0
 					|| (!entries[2].equals("Other")&&!entries[2].equals("Card"))) {
-				in.close();
+				readerScanner.close();
 				throw new BadConfigFormatException(roomConfigFile);
 			} else {
 				legend.put(entries[0].charAt(0), entries[1]);
@@ -71,7 +71,7 @@ public class Board {
 				}
 			}
 		}
-		in.close();
+		readerScanner.close();
 	}
 	/**
 	 * Loads the board file.
@@ -83,70 +83,70 @@ public class Board {
 		targets = new HashSet<BoardCell>();
 		
 		FileReader reader = new FileReader(boardConfigFile);
-		Scanner in = new Scanner(reader);
+		Scanner readerScanner = new Scanner(reader);
 		numRows = 0;
 		numColumns = 0;
-		while (in.hasNextLine()) {
-			in.nextLine();
+		while (readerScanner.hasNextLine()) {
+			readerScanner.nextLine();
 			++numRows;
 		}
-		in.close();
+		readerScanner.close();
 
 		board = new BoardCell[numRows][];
 		reader = new FileReader(boardConfigFile);
-		in = new Scanner(reader);
-		int i = 0;
-		while (in.hasNextLine()) {
-			String[] entries = in.nextLine().split(",");
+		readerScanner = new Scanner(reader);
+		int row = 0;
+		while (readerScanner.hasNextLine()) {
+			String[] entries = readerScanner.nextLine().split(",");
 			if (numColumns == 0) {
 				numColumns = entries.length;
 			} else if (entries.length != numColumns) {
-				in.close();
+				readerScanner.close();
 				throw new BadConfigFormatException(boardConfigFile);
 			}
 			
-			board[i] = new BoardCell[numColumns];
-			for (int j = 0; j < numColumns; ++j) {
-				if (!legend.containsKey(entries[j].charAt(0))) {
-					in.close();
+			board[row] = new BoardCell[numColumns];
+			for (int col = 0; col < numColumns; ++col) {
+				if (!legend.containsKey(entries[col].charAt(0))) {
+					readerScanner.close();
 					throw new BadConfigFormatException(boardConfigFile);
 				}
-				if (entries[j].length() == 1) {
-					if (entries[j].charAt(0) == walkwayChar) {
-						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.NONE, true);
+				if (entries[col].length() == 1) {
+					if (entries[col].charAt(0) == walkwayChar) {
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.NONE, true);
 					} else {
-						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.NONE, false);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.NONE, false);
 					}
-				} else if (entries[j].length() == 2) {
-					char dir = entries[j].charAt(1);
+				} else if (entries[col].length() == 2) {
+					char dir = entries[col].charAt(1);
 					switch(dir) {
 					case 'R':
-						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.RIGHT, false);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.RIGHT, false);
 					break;
 					case 'L':
-						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.LEFT, false);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.LEFT, false);
 					break;
 					case 'U':
-						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.UP, false);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.UP, false);
 					break;
 					case 'D':
-						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.DOWN, false);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.DOWN, false);
 					break;
 					case 'N':
-						board[i][j] = new BoardCell(i, j, entries[j].charAt(0), DoorDirection.NONE, false);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.NONE, false);
 					break;
 					default:
-						in.close();
+						readerScanner.close();
 						throw new BadConfigFormatException(boardConfigFile);
 					}
 				} else {
-					in.close();
+					readerScanner.close();
 					throw new BadConfigFormatException(boardConfigFile);
 				}	
 			}
-			++i;
+			++row;
 		}
-		in.close();
+		readerScanner.close();
 		calcAdjacencies();
 	}
 	
@@ -211,7 +211,7 @@ public class Board {
 		findAllTargets(cell, pathLength, cell.getInitial());
 	}
 	
-	private void findAllTargets(BoardCell cell, int i, char startingRoom) {
+	private void findAllTargets(BoardCell cell, int pathLength, char startingRoom) {
 		for (BoardCell myCell : adjMatrix.get(cell)) {
 			if (!visited.contains(myCell)) {
 				visited.add(myCell);
@@ -219,10 +219,10 @@ public class Board {
 					if (myCell.getInitial() != startingRoom) {
 						targets.add(myCell);
 					}
-				} else if (i == 1) {
+				} else if (pathLength == 1) {
 					targets.add(myCell);
 				} else {
-					findAllTargets(myCell, i - 1, startingRoom);
+					findAllTargets(myCell, pathLength - 1, startingRoom);
 				}
 				visited.remove(myCell);
 			}
@@ -284,31 +284,31 @@ public class Board {
 	
 	/**
 	 * Return board cell at location row i, column j.
-	 * @param i - Index of row number
-	 * @param j - Index of column number
+	 * @param row - Index of row number
+	 * @param col - Index of column number
 	 * @return - Board cell object
 	 */
-	public BoardCell getCellAt(int i, int j) {
-		return board[i][j];
+	public BoardCell getCellAt(int row, int col) {
+		return board[row][col];
 	}
 	
 	/**
 	 * Get the adjacency list at row i column j.
-	 * @param i - Index of row number
-	 * @param j - Index of column number
+	 * @param row - Index of row number
+	 * @param col - Index of column number
 	 * @return - Set of Board Cells adjacent to cell at i,j
 	 */
-	public Set<BoardCell> getAdjList(int i, int j) {
-		return getAdjList(getCellAt(i,j));
+	public Set<BoardCell> getAdjList(int row, int col) {
+		return getAdjList(getCellAt(row,col));
 	}
 	
 	/**
 	 * Calculate the targets list at row i column j with pathLength steps.
-	 * @param i - Index of row number
-	 * @param j - Index of column number
+	 * @param row - Index of row number
+	 * @param col - Index of column number
 	 * @param pathLength - Distance to travel.
 	 */
-	public void calcTargets(int i, int j, int pathLength) {
-		calcTargets(getCellAt(i,j), pathLength);
+	public void calcTargets(int row, int col, int pathLength) {
+		calcTargets(getCellAt(row,col), pathLength);
 	}
 }
