@@ -1,5 +1,6 @@
 package clueGame;
 /**
+ * Enumerated type that indicates the direction a door points in.
  * 
  * @author Joseph Thurston
  * @author Thomas Depke

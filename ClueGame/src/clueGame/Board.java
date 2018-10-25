@@ -28,8 +28,6 @@ public class Board {
 	private String boardConfigFile;
 	private String roomConfigFile;
 	
-	public static final int MAX_BOARD_SIZE = 50;
-	
 	// variable used for singleton pattern
 	private static Board theInstance = new Board();
 	// constructor is private to ensure only one can be created
@@ -37,15 +35,15 @@ public class Board {
 	// this method returns the only Board
 	/**
 	 * Get the singleton board.
-	 * @return
+	 * @return - Board object representing the single instance of the Board class.
 	 */
 	public static Board getInstance() {
 		return theInstance;
 	}
 	/**
 	 * Sets file names.
-	 * @param fileCSV
-	 * @param legendFile
+	 * @param fileCSV - name of the configuration file for the board
+	 * @param legendFile - name of the configuration file for the legend
 	 */
 	public void setConfigFiles(String fileCSV, String legendFile) {
 		boardConfigFile = fileCSV;
@@ -93,7 +91,7 @@ public class Board {
 			++numRows;
 		}
 		in.close();
-		
+
 		board = new BoardCell[numRows][];
 		reader = new FileReader(boardConfigFile);
 		in = new Scanner(reader);
@@ -144,15 +142,14 @@ public class Board {
 				} else {
 					in.close();
 					throw new BadConfigFormatException(boardConfigFile);
-				}
-				
+				}	
 			}
-		
 			++i;
 		}
 		in.close();
 		calcAdjacencies();
 	}
+	
 	/**
 	 * Build the adjacency list.
 	 */
@@ -201,10 +198,11 @@ public class Board {
 			}
 		}
 	}
+	
 	/**
 	 * Calculate the targets list at cell with pathLength steps.
-	 * @param cell
-	 * @param pathLength
+	 * @param cell - Board Cell to calculate targets from
+	 * @param pathLength - The number of steps to take when calculating target list
 	 */
 	public void calcTargets(BoardCell cell, int pathLength) {
 		targets.clear();
@@ -233,7 +231,7 @@ public class Board {
 	
 	/**
 	 * Get the targets list for a cell.
-	 * @return
+	 * @return - Set containing targets
 	 */
 	public Set<BoardCell> getTargets() {
 		return targets;
@@ -241,12 +239,13 @@ public class Board {
 	
 	/**
 	 * Get the adjacency list for a specified cell.
-	 * @param cell
-	 * @return
+	 * @param cell - cell to get the adjacency list for.
+	 * @return - Set of Board Cells adjacent to cell
 	 */
 	public Set<BoardCell> getAdjList(BoardCell cell) {
 		return adjMatrix.get(cell);
 	}
+	
 	/**
 	 * Loads both configuration files.
 	 */
@@ -255,36 +254,39 @@ public class Board {
 			loadRoomConfig();
 			loadBoardConfig();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
 	/**
 	 * Gets the legend.
-	 * @return
+	 * @return - Map representing the legend.
 	 */
 	public Map<Character, String> getLegend() {
 		return legend;
 	}
+	
 	/**
 	 * Get number of rows.
-	 * @return
+	 * @return - Integer representing the number of rows on the board.
 	 */
 	public int getNumRows() {
 		return numRows;
 	}
+	
 	/**
 	 * Get number of columns.
-	 * @return
+	 * @return - Integer representing the number of columns on the board.
 	 */
 	public int getNumColumns() {
 		return numColumns;
 	}
+	
 	/**
 	 * Return board cell at location row i, column j.
-	 * @param i
-	 * @param j
-	 * @return
+	 * @param i - Index of row number
+	 * @param j - Index of column number
+	 * @return - Board cell object
 	 */
 	public BoardCell getCellAt(int i, int j) {
 		return board[i][j];
@@ -292,24 +294,21 @@ public class Board {
 	
 	/**
 	 * Get the adjacency list at row i column j.
-	 * @param i
-	 * @param j
-	 * @return
+	 * @param i - Index of row number
+	 * @param j - Index of column number
+	 * @return - Set of Board Cells adjacent to cell at i,j
 	 */
 	public Set<BoardCell> getAdjList(int i, int j) {
-		
 		return getAdjList(getCellAt(i,j));
 	}
 	
 	/**
 	 * Calculate the targets list at row i column j with pathLength steps.
-	 * @param i
-	 * @param j
-	 * @param pathLength
+	 * @param i - Index of row number
+	 * @param j - Index of column number
+	 * @param pathLength - Distance to travel.
 	 */
 	public void calcTargets(int i, int j, int pathLength) {
 		calcTargets(getCellAt(i,j), pathLength);
-		
 	}
-
 }

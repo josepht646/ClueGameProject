@@ -24,7 +24,7 @@ public class BadConfigFormatException extends Exception {
 	}
 	/**
 	 * Parameterized constructor writes to log file with a more descriptive message.
-	 * @param name
+	 * @param name - Filename that triggers the exception
 	 */
 	public BadConfigFormatException(String name) {
 		super(name + " is not correctly formatted.");
