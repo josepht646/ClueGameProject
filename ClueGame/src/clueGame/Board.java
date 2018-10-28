@@ -238,18 +238,10 @@ public class Board {
 				}
 				
 				if (board[i][j].isWalkway()) {    // If cell is walkway, can move to another walkway or enter door in correct direction.
-					if (i - 1 >= 0 && (board[i-1][j].isWalkway() || (board[i-1][j].isDoorway() && board[i-1][j].getDoorDirection() == DoorDirection.DOWN))) {
-						adjMatrix.get(board[i][j]).add(board[i - 1][j]);
-					}
-					if (j + 1 < board[i].length && (board[i][j+1].isWalkway() || (board[i][j+1].isDoorway() && board[i][j+1].getDoorDirection() == DoorDirection.LEFT))) {
-						adjMatrix.get(board[i][j]).add(board[i][j + 1]);
-					}
-					if (i + 1 < board.length && (board[i+1][j].isWalkway() || (board[i+1][j].isDoorway() && board[i+1][j].getDoorDirection() == DoorDirection.UP))) {
-						adjMatrix.get(board[i][j]).add(board[i + 1][j]);
-					}
-					if (j - 1 >= 0 && (board[i][j-1].isWalkway() || (board[i][j-1].isDoorway() && board[i][j-1].getDoorDirection() == DoorDirection.RIGHT))) {
-						adjMatrix.get(board[i][j]).add(board[i][j - 1]);
-					}
+					addToAdjMatrix(board[i][j], i - 1, j, DoorDirection.DOWN);
+					addToAdjMatrix(board[i][j], i, j + 1, DoorDirection.LEFT);
+					addToAdjMatrix(board[i][j], i + 1, j, DoorDirection.UP);
+					addToAdjMatrix(board[i][j], i, j - 1, DoorDirection.RIGHT);
 				} else {    // Cell must be a door (we assume the cell in the door direction is a walkway).
 					switch(board[i][j].getDoorDirection()) {
 					case DOWN:
@@ -271,6 +263,19 @@ public class Board {
 					}
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Add a cell to the adjacency list if it lies on the board and is a walkway or is a doorway and matches the direction.
+	 * @param currentCell - Current cell in adjacency list
+	 * @param row - Row of target cell
+	 * @param col - Column of target cell
+	 * @param direction - Direction to match in the case of a door
+	 */
+	private void addToAdjMatrix(BoardCell currentCell, int row, int col, DoorDirection direction) {
+		if (row >= 0 && row < board.length && col >= 0 && col < board[0].length && (board[row][col].isWalkway() || board[row][col].isDoorway() && board[row][col].getDoorDirection() == direction)) {
+			adjMatrix.get(currentCell).add(board[row][col]);
 		}
 	}
 	
