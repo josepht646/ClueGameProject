@@ -25,7 +25,7 @@ public class Board {
 	private Map<Character, String> legend;
 	private char walkwayChar;
 	private BoardCell[][] board;
-	private Map<BoardCell, Set<BoardCell>> adjMatrix;    // Adjacency list for objects on the board.
+	private Map<BoardCell, Set<BoardCell>> adjList;    // Adjacency list for objects on the board.
 	private Set<BoardCell> visited, targets;
 	
 	/**
@@ -91,17 +91,17 @@ public class Board {
 	 * @return - Set of Board Cells adjacent to cell
 	 */
 	public Set<BoardCell> getAdjList(BoardCell cell) {
-		return adjMatrix.get(cell);
+		return adjList.get(cell);
 	}
 	
 	/**
-	 * Get the adjacency list at row i column j.
+	 * Get the adjacency list at row and column.
 	 * @param row - Index of row number
 	 * @param col - Index of column number
-	 * @return - Set of Board Cells adjacent to cell at i,j
+	 * @return - Set of Board Cells adjacent to cell at row, col
 	 */
 	public Set<BoardCell> getAdjList(int row, int col) {
-		return getAdjList(getCellAt(row,col));
+		return getAdjList(getCellAt(row, col));
 	}
 	
 	/**
@@ -119,8 +119,8 @@ public class Board {
 		try {
 			loadRoomConfig();
 			loadBoardConfig();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 	
@@ -229,34 +229,34 @@ public class Board {
 	 * Build the adjacency list.
 	 */
 	public void calcAdjacencies() {
-		adjMatrix = new HashMap<BoardCell, Set<BoardCell>>();
-		for (int i = 0; i < board.length; ++i) {
-			for (int j = 0; j < board[i].length; ++j) {
-				adjMatrix.put(board[i][j], new HashSet<BoardCell>());
-				if (!board[i][j].isWalkway() && !board[i][j].isDoorway()) {    // If cell is a room, no positions to move to.
+		adjList = new HashMap<BoardCell, Set<BoardCell>>();
+		for (int row = 0; row < board.length; ++row) {
+			for (int col = 0; col < board[row].length; ++col) {
+				adjList.put(board[row][col], new HashSet<BoardCell>());
+				if (!board[row][col].isWalkway() && !board[row][col].isDoorway()) {    // If cell is a room, no positions to move to.
 					continue;
 				}
 				
-				if (board[i][j].isWalkway()) {    // If cell is walkway, can move to another walkway or enter door in correct direction.
-					addToAdjMatrix(board[i][j], i - 1, j, DoorDirection.DOWN);
-					addToAdjMatrix(board[i][j], i, j + 1, DoorDirection.LEFT);
-					addToAdjMatrix(board[i][j], i + 1, j, DoorDirection.UP);
-					addToAdjMatrix(board[i][j], i, j - 1, DoorDirection.RIGHT);
+				if (board[row][col].isWalkway()) {    // If cell is walkway, can move to another walkway or enter door in correct direction.
+					addToAdjMatrix(board[row][col], row - 1, col, DoorDirection.DOWN);
+					addToAdjMatrix(board[row][col], row, col + 1, DoorDirection.LEFT);
+					addToAdjMatrix(board[row][col], row + 1, col, DoorDirection.UP);
+					addToAdjMatrix(board[row][col], row, col - 1, DoorDirection.RIGHT);
 				} else {    // Cell must be a door (we assume the cell in the door direction is a walkway).
-					switch(board[i][j].getDoorDirection()) {
+					switch(board[row][col].getDoorDirection()) {
 					case DOWN:
-						adjMatrix.get(board[i][j]).add(board[i + 1][j]);
+						adjList.get(board[row][col]).add(board[row + 1][col]);
 						break;
 					case LEFT:
-						adjMatrix.get(board[i][j]).add(board[i][j - 1]);
+						adjList.get(board[row][col]).add(board[row][col - 1]);
 						break;
 					case NONE:
 						break;
 					case RIGHT:
-						adjMatrix.get(board[i][j]).add(board[i][j + 1]);
+						adjList.get(board[row][col]).add(board[row][col + 1]);
 						break;
 					case UP:
-						adjMatrix.get(board[i][j]).add(board[i - 1][j]);
+						adjList.get(board[row][col]).add(board[row - 1][col]);
 						break;
 					default:
 						break;
@@ -275,7 +275,7 @@ public class Board {
 	 */
 	private void addToAdjMatrix(BoardCell currentCell, int row, int col, DoorDirection direction) {
 		if (row >= 0 && row < board.length && col >= 0 && col < board[0].length && (board[row][col].isWalkway() || board[row][col].isDoorway() && board[row][col].getDoorDirection() == direction)) {
-			adjMatrix.get(currentCell).add(board[row][col]);
+			adjList.get(currentCell).add(board[row][col]);
 		}
 	}
 	
@@ -308,7 +308,7 @@ public class Board {
 	 * @param startingRoom - The character of the room where the player starts
 	 */
 	private void findAllTargets(BoardCell cell, int pathLength, char startingRoom) {
-		for (BoardCell myCell : adjMatrix.get(cell)) {
+		for (BoardCell myCell : adjList.get(cell)) {
 			if (!visited.contains(myCell)) {    // Check if cell has not been visited yet.
 				visited.add(myCell);
 				if (myCell.isDoorway()) {    // If its a doorway and not the same room where we started, its a target.
