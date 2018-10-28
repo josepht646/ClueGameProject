@@ -74,22 +74,6 @@ public class BoardCell {
 	}
 	
 	/**
-	 * Test whether BoardCell is doorway.
-	 * @return - True if cell is a doorway
-	 */
-	public boolean isDoorway() {
-		return doorDir != DoorDirection.NONE;
-	}
-	
-	/**
-	 * Test whether BoardCell is a walkway.
-	 * @return - If cell is a walkway
-	 */
-	public boolean isWalkway() {
-		return isWalkway;
-	}
-	
-	/**
 	 * Get Door Direction.
 	 * @return - Direction of door, or NONE if not a door
 	 */
@@ -103,6 +87,22 @@ public class BoardCell {
 	 */
 	public char getInitial() {
 		return initial;
+	}
+	
+	/**
+	 * Test whether BoardCell is doorway.
+	 * @return - True if cell is a doorway
+	 */
+	public boolean isDoorway() {
+		return doorDir != DoorDirection.NONE;
+	}
+	
+	/**
+	 * Test whether BoardCell is a walkway.
+	 * @return - If cell is a walkway
+	 */
+	public boolean isWalkway() {
+		return isWalkway;
 	}
 	
 	/**
