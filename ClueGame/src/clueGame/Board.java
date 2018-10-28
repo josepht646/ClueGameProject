@@ -17,18 +17,31 @@ import clueGame.BoardCell;
  *
  */
 public class Board {
-	private int numRows;
-	private int numColumns;
-	private BoardCell[][] board;
-	private Map<Character, String> legend;
-	private char walkwayChar;
-	private Map<BoardCell, Set<BoardCell>> adjMatrix;    // Adjacency list for objects on the board.
-	private Set<BoardCell> visited, targets;
+	private static Board theInstance = new Board();    // Variable used for singleton pattern.
 	private String boardConfigFile;
 	private String roomConfigFile;
-	private static Board theInstance = new Board();    // Variable used for singleton pattern.
+	private int numRows;
+	private int numColumns;
+	private Map<Character, String> legend;
+	private char walkwayChar;
+	private BoardCell[][] board;
+	private Map<BoardCell, Set<BoardCell>> adjMatrix;    // Adjacency list for objects on the board.
+	private Set<BoardCell> visited, targets;
 	
-	private Board() {}    // Constructor is private to ensure only one can be created.
+	/**
+	 * Constructor is private to ensure only one instance can be created.
+	 */
+	private Board() {}
+	
+	/**
+	 * Sets file names.
+	 * @param fileCSV - name of the configuration file for the board
+	 * @param legendFile - name of the configuration file for the legend
+	 */
+	public void setConfigFiles(String fileCSV, String legendFile) {
+		boardConfigFile = fileCSV;
+		roomConfigFile = legendFile;
+	}
 	
 	/**
 	 * Get the singleton board.
@@ -39,13 +52,76 @@ public class Board {
 	}
 	
 	/**
-	 * Sets file names.
-	 * @param fileCSV - name of the configuration file for the board
-	 * @param legendFile - name of the configuration file for the legend
+	 * Get number of rows.
+	 * @return - Integer representing the number of rows on the board.
 	 */
-	public void setConfigFiles(String fileCSV, String legendFile) {
-		boardConfigFile = fileCSV;
-		roomConfigFile = legendFile;
+	public int getNumRows() {
+		return numRows;
+	}
+	
+	/**
+	 * Get number of columns.
+	 * @return - Integer representing the number of columns on the board.
+	 */
+	public int getNumColumns() {
+		return numColumns;
+	}
+	
+	/**
+	 * Gets the legend.
+	 * @return - Map representing the legend.
+	 */
+	public Map<Character, String> getLegend() {
+		return legend;
+	}
+	
+	/**
+	 * Return board cell at location row i, column j.
+	 * @param row - Index of row number
+	 * @param col - Index of column number
+	 * @return - Board cell object
+	 */
+	public BoardCell getCellAt(int row, int col) {
+		return board[row][col];
+	}
+	
+	/**
+	 * Get the adjacency list for a specified cell.
+	 * @param cell - cell to get the adjacency list for.
+	 * @return - Set of Board Cells adjacent to cell
+	 */
+	public Set<BoardCell> getAdjList(BoardCell cell) {
+		return adjMatrix.get(cell);
+	}
+	
+	/**
+	 * Get the adjacency list at row i column j.
+	 * @param row - Index of row number
+	 * @param col - Index of column number
+	 * @return - Set of Board Cells adjacent to cell at i,j
+	 */
+	public Set<BoardCell> getAdjList(int row, int col) {
+		return getAdjList(getCellAt(row,col));
+	}
+	
+	/**
+	 * Get the targets list for a cell.
+	 * @return - Set containing targets
+	 */
+	public Set<BoardCell> getTargets() {
+		return targets;
+	}
+	
+	/**
+	 * Loads both configuration files.
+	 */
+	public void initialize() {
+		try {
+			loadRoomConfig();
+			loadBoardConfig();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -211,6 +287,16 @@ public class Board {
 	}
 	
 	/**
+	 * Calculate the targets list at row i column j with pathLength steps.
+	 * @param row - Index of row number
+	 * @param col - Index of column number
+	 * @param pathLength - Distance to travel.
+	 */
+	public void calcTargets(int row, int col, int pathLength) {
+		calcTargets(getCellAt(row,col), pathLength);
+	}
+	
+	/**
 	 * Recursive function to find all possible positions for player to move to (the targets list).
 	 * @param cell - Board Cell to calculate targets from
 	 * @param pathLength - The number of steps to take when calculating target list
@@ -232,88 +318,5 @@ public class Board {
 				visited.remove(myCell);
 			}
 		}
-	}
-	
-	/**
-	 * Get the targets list for a cell.
-	 * @return - Set containing targets
-	 */
-	public Set<BoardCell> getTargets() {
-		return targets;
-	}
-	
-	/**
-	 * Get the adjacency list for a specified cell.
-	 * @param cell - cell to get the adjacency list for.
-	 * @return - Set of Board Cells adjacent to cell
-	 */
-	public Set<BoardCell> getAdjList(BoardCell cell) {
-		return adjMatrix.get(cell);
-	}
-	
-	/**
-	 * Loads both configuration files.
-	 */
-	public void initialize() {
-		try {
-			loadRoomConfig();
-			loadBoardConfig();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Gets the legend.
-	 * @return - Map representing the legend.
-	 */
-	public Map<Character, String> getLegend() {
-		return legend;
-	}
-	
-	/**
-	 * Get number of rows.
-	 * @return - Integer representing the number of rows on the board.
-	 */
-	public int getNumRows() {
-		return numRows;
-	}
-	
-	/**
-	 * Get number of columns.
-	 * @return - Integer representing the number of columns on the board.
-	 */
-	public int getNumColumns() {
-		return numColumns;
-	}
-	
-	/**
-	 * Return board cell at location row i, column j.
-	 * @param row - Index of row number
-	 * @param col - Index of column number
-	 * @return - Board cell object
-	 */
-	public BoardCell getCellAt(int row, int col) {
-		return board[row][col];
-	}
-	
-	/**
-	 * Get the adjacency list at row i column j.
-	 * @param row - Index of row number
-	 * @param col - Index of column number
-	 * @return - Set of Board Cells adjacent to cell at i,j
-	 */
-	public Set<BoardCell> getAdjList(int row, int col) {
-		return getAdjList(getCellAt(row,col));
-	}
-	
-	/**
-	 * Calculate the targets list at row i column j with pathLength steps.
-	 * @param row - Index of row number
-	 * @param col - Index of column number
-	 * @param pathLength - Distance to travel.
-	 */
-	public void calcTargets(int row, int col, int pathLength) {
-		calcTargets(getCellAt(row,col), pathLength);
 	}
 }
