@@ -9,23 +9,22 @@ import java.io.PrintWriter;
  *
  */
 public class BadConfigFormatException extends Exception {
-	/**
-	 * Exception Serial Version.
-	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;    // Exception serial version.
+	
 	/**
 	 * Default constructor writes to log file.
 	 */
 	public BadConfigFormatException() {
 		super("Configuration File is not in the correct format.");
 		try {
-			PrintWriter outFile = new PrintWriter("logfile.txt");
+			PrintWriter outFile = new PrintWriter("logfile.txt");    // Write the error to log file.
 			outFile.println("Configuration File is not in the correct format.");
 			outFile.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
 	/**
 	 * Parameterized constructor writes to log file with a more descriptive message.
 	 * @param name - Filename that triggers the exception
@@ -33,7 +32,7 @@ public class BadConfigFormatException extends Exception {
 	public BadConfigFormatException(String name) {
 		super(name + " is not correctly formatted.");
 		try {
-			PrintWriter outFile = new PrintWriter("logfile.txt");
+			PrintWriter outFile = new PrintWriter("logfile.txt");    // Write the error with filename to log file.
 			outFile.println(name + " is not correctly formatted.");
 			outFile.close();
 		} catch (Exception e) {

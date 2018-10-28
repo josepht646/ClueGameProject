@@ -2,7 +2,6 @@ package clueGame;
 
 /**
  * The BoardCell class represents a cell in a board with row, column, label, and door direction.
- * 
  * @author Joseph Thurston
  * @author Thomas Depke
  *
@@ -73,6 +72,7 @@ public class BoardCell {
 	public int getColumn() {
 		return column;
 	}
+	
 	/**
 	 * Test whether BoardCell is doorway.
 	 * @return - True if cell is a doorway
@@ -80,6 +80,7 @@ public class BoardCell {
 	public boolean isDoorway() {
 		return doorDir != DoorDirection.NONE;
 	}
+	
 	/**
 	 * Test whether BoardCell is a walkway.
 	 * @return - If cell is a walkway
@@ -95,6 +96,7 @@ public class BoardCell {
 	public DoorDirection getDoorDirection() {
 		return doorDir;
 	}
+	
 	/**
 	 * Get character representing board cell.
 	 * @return - Character for the cell

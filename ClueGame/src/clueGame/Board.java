@@ -12,7 +12,6 @@ import clueGame.BoardCell;
 
 /**
  * The board class loads two configuration files to generate a clue game board.
- * Extra credit is included.
  * @author Joseph Thurston
  * @author Thomas Depke
  *
@@ -23,16 +22,14 @@ public class Board {
 	private BoardCell[][] board;
 	private Map<Character, String> legend;
 	private char walkwayChar;
-	private Map<BoardCell, Set<BoardCell>> adjMatrix;
+	private Map<BoardCell, Set<BoardCell>> adjMatrix;    // Adjacency list for objects on the board.
 	private Set<BoardCell> visited, targets;
 	private String boardConfigFile;
 	private String roomConfigFile;
+	private static Board theInstance = new Board();    // Variable used for singleton pattern.
 	
-	// variable used for singleton pattern
-	private static Board theInstance = new Board();
-	// constructor is private to ensure only one can be created
-	private Board() {}
-	// this method returns the only Board
+	private Board() {}    // Constructor is private to ensure only one can be created.
+	
 	/**
 	 * Get the singleton board.
 	 * @return - Board object representing the single instance of the Board class.
@@ -40,6 +37,7 @@ public class Board {
 	public static Board getInstance() {
 		return theInstance;
 	}
+	
 	/**
 	 * Sets file names.
 	 * @param fileCSV - name of the configuration file for the board
@@ -49,6 +47,7 @@ public class Board {
 		boardConfigFile = fileCSV;
 		roomConfigFile = legendFile;
 	}
+	
 	/**
 	 * Loads the legend file.
 	 * @throws BadConfigFormatException
@@ -56,12 +55,11 @@ public class Board {
 	 */
 	public void loadRoomConfig() throws BadConfigFormatException, FileNotFoundException {
 		legend = new HashMap<Character, String>();
-		FileReader reader = new FileReader(roomConfigFile);
+		FileReader reader = new FileReader(roomConfigFile);    // Open the roomConfigFile to read data for the legend.
 		Scanner readerScanner = new Scanner(reader);
 		while (readerScanner.hasNextLine()) {
-			String[] entries = readerScanner.nextLine().split(", ");
-			if(entries.length != 3 || entries[0].length() != 1 || entries[1].length() == 0
-					|| (!entries[2].equals("Other")&&!entries[2].equals("Card"))) {
+			String[] entries = readerScanner.nextLine().split(", ");    // Split each line using commas as delimiters and parse each entry.
+			if(entries.length != 3 || entries[0].length() != 1 || entries[1].length() == 0 || (!entries[2].equals("Other") && !entries[2].equals("Card"))) {
 				readerScanner.close();
 				throw new BadConfigFormatException(roomConfigFile);
 			} else {
@@ -73,6 +71,7 @@ public class Board {
 		}
 		readerScanner.close();
 	}
+	
 	/**
 	 * Loads the board file.
 	 * @throws BadConfigFormatException
@@ -82,23 +81,23 @@ public class Board {
 		visited = new HashSet<BoardCell>();
 		targets = new HashSet<BoardCell>();
 		
-		FileReader reader = new FileReader(boardConfigFile);
+		FileReader reader = new FileReader(boardConfigFile);    // Open the boardConfigFile to read data for the game board.
 		Scanner readerScanner = new Scanner(reader);
 		numRows = 0;
 		numColumns = 0;
-		while (readerScanner.hasNextLine()) {
+		while (readerScanner.hasNextLine()) {    // Go through the file once and count the lines so we can allocate the correct amount of space for the board.
 			readerScanner.nextLine();
 			++numRows;
 		}
 		readerScanner.close();
-
+		
 		board = new BoardCell[numRows][];
 		reader = new FileReader(boardConfigFile);
 		readerScanner = new Scanner(reader);
 		int row = 0;
 		while (readerScanner.hasNextLine()) {
-			String[] entries = readerScanner.nextLine().split(",");
-			if (numColumns == 0) {
+			String[] entries = readerScanner.nextLine().split(",");    // Split each line using commas as delimiters and parse each entry.
+			if (numColumns == 0) {    // Make sure each line has same number of entries.
 				numColumns = entries.length;
 			} else if (entries.length != numColumns) {
 				readerScanner.close();
@@ -106,18 +105,18 @@ public class Board {
 			}
 			
 			board[row] = new BoardCell[numColumns];
-			for (int col = 0; col < numColumns; ++col) {
-				if (!legend.containsKey(entries[col].charAt(0))) {
+			for (int col = 0; col < numColumns; ++col) {    // Add cell for each column in the row.
+				if (!legend.containsKey(entries[col].charAt(0))) {    // If cell is not valid, throw an error.
 					readerScanner.close();
 					throw new BadConfigFormatException(boardConfigFile);
 				}
-				if (entries[col].length() == 1) {
+				if (entries[col].length() == 1) {    // Else if cell ID is length 1, it must be a walkway/room/closet and not a door.
 					if (entries[col].charAt(0) == walkwayChar) {
 						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.NONE, true);
 					} else {
 						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.NONE, false);
 					}
-				} else if (entries[col].length() == 2) {
+				} else if (entries[col].length() == 2) {    // Else if cell ID is length 2, it must be a door or room label.
 					char dir = entries[col].charAt(1);
 					switch(dir) {
 					case 'R':
@@ -139,7 +138,7 @@ public class Board {
 						readerScanner.close();
 						throw new BadConfigFormatException(boardConfigFile);
 					}
-				} else {
+				} else {    // Else, its not valid.
 					readerScanner.close();
 					throw new BadConfigFormatException(boardConfigFile);
 				}	
@@ -147,7 +146,7 @@ public class Board {
 			++row;
 		}
 		readerScanner.close();
-		calcAdjacencies();
+		calcAdjacencies();    // Calculate adjacency list once all cells are loaded.
 	}
 	
 	/**
@@ -158,7 +157,7 @@ public class Board {
 		for (int i = 0; i < board.length; ++i) {
 			for (int j = 0; j < board[i].length; ++j) {
 				adjMatrix.put(board[i][j], new HashSet<BoardCell>());
-				if (!board[i][j].isWalkway() && !board[i][j].isDoorway()) {   // If cell is a room, no positions to move to.
+				if (!board[i][j].isWalkway() && !board[i][j].isDoorway()) {    // If cell is a room, no positions to move to.
 					continue;
 				}
 				
@@ -211,17 +210,23 @@ public class Board {
 		findAllTargets(cell, pathLength, cell.getInitial());
 	}
 	
+	/**
+	 * Recursive function to find all possible positions for player to move to (the targets list).
+	 * @param cell - Board Cell to calculate targets from
+	 * @param pathLength - The number of steps to take when calculating target list
+	 * @param startingRoom - The character of the room where the player starts
+	 */
 	private void findAllTargets(BoardCell cell, int pathLength, char startingRoom) {
 		for (BoardCell myCell : adjMatrix.get(cell)) {
-			if (!visited.contains(myCell)) {
+			if (!visited.contains(myCell)) {    // Check if cell has not been visited yet.
 				visited.add(myCell);
-				if (myCell.isDoorway()) {
+				if (myCell.isDoorway()) {    // If its a doorway and not the same room where we started, its a target.
 					if (myCell.getInitial() != startingRoom) {
 						targets.add(myCell);
 					}
-				} else if (pathLength == 1) {
+				} else if (pathLength == 1) {    // Else if we reached end of path, add the cell as a target.
 					targets.add(myCell);
-				} else {
+				} else {    // Else, move on to the next tiles around the one we are at.
 					findAllTargets(myCell, pathLength - 1, startingRoom);
 				}
 				visited.remove(myCell);
