@@ -27,7 +27,7 @@ public class Board {
 	private BoardCell[][] board;
 	private Map<BoardCell, Set<BoardCell>> adjList;    // Adjacency list for objects on the board.
 	private Set<BoardCell> visited, targets;
-	
+	private Solution theAnswer;
 	/**
 	 * Constructor is private to ensure only one instance can be created.
 	 */
@@ -323,5 +323,23 @@ public class Board {
 				visited.remove(myCell);
 			}
 		}
+	}
+	
+	//ANSWER and Solution stuff
+	
+	public void selectAnswer() {
+		
+	}
+	
+	public Card handleSuggestion() {
+		return null;
+	}
+	
+	public boolean checkAccusation(Solution accusation) {
+		return false;
+	}
+	
+	public void loadConfigFiles() {
+		
 	}
 }
