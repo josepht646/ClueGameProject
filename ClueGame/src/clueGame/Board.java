@@ -29,7 +29,7 @@ public class Board {
 	private BoardCell[][] board;
 	private Map<BoardCell, Set<BoardCell>> adjList;    // Adjacency list for objects on the board.
 	private Set<BoardCell> visited, targets;
-	private Player[] players;
+	private ArrayList<Player> players;
 	private ArrayList<Card> deck;
 	private Solution theAnswer;
 	/**
@@ -128,8 +128,8 @@ public class Board {
 		return targets;
 	}
 	
-	public Player[] getPlayers() {
-		return new Player[6];
+	public ArrayList<Player> getPlayers() {
+		return players;
 	}
 	
 	/**
@@ -365,16 +365,21 @@ public class Board {
 	}
 	
 	public void loadConfigFiles() throws BadConfigFormatException, FileNotFoundException {
+		players = new ArrayList<Player>();
 		FileReader reader = new FileReader(peopleConfigFile);
 		Scanner readerScanner = new Scanner(reader);
 		while (readerScanner.hasNextLine()) {
 			String[] entries = readerScanner.nextLine().split(", ");    // Split each line using commas as delimiters and parse each entry.
-			if(entries.length != 4 || entries[0].length() == 0 || entries[1].length() == 0 || Integer.parseInt(entries[2]) < 0  || Integer.parseInt(entries[3]) < 0) {
+			if(entries.length != 5 || entries[0].length() == 0 || convertColor(entries[1]) == null|| (!entries[2].equals("C") && !entries[2].equals("H"))) {
 				readerScanner.close();
 				throw new BadConfigFormatException(peopleConfigFile);
 			} else {
 				deck.add(new Card(entries[0], CardType.PERSON));
-				
+				if (entries[2].equals("C")) {
+					players.add(new ComputerPlayer(entries[0], Integer.parseInt(entries[3]), Integer.parseInt(entries[4]), convertColor(entries[1])));
+				} else {
+					players.add(new HumanPlayer(entries[0], Integer.parseInt(entries[3]), Integer.parseInt(entries[4]), convertColor(entries[1])));
+				}
 				
 			}
 		}
