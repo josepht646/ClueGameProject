@@ -1,7 +1,10 @@
 package clueGame;
 
+import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,6 +30,7 @@ public class Board {
 	private Map<BoardCell, Set<BoardCell>> adjList;    // Adjacency list for objects on the board.
 	private Set<BoardCell> visited, targets;
 	private Player[] players;
+	private ArrayList<Card> deck;
 	private Solution theAnswer;
 	/**
 	 * Constructor is private to ensure only one instance can be created.
@@ -148,6 +152,7 @@ public class Board {
 	 */
 	public void loadRoomConfig() throws BadConfigFormatException, FileNotFoundException {
 		legend = new HashMap<Character, String>();
+		deck = new ArrayList<Card>();
 		FileReader reader = new FileReader(roomConfigFile);    // Open the roomConfigFile to read data for the legend.
 		Scanner readerScanner = new Scanner(reader);
 		while (readerScanner.hasNextLine()) {
@@ -159,6 +164,9 @@ public class Board {
 				legend.put(entries[0].charAt(0), entries[1]);
 				if (entries[1].equals("Walkway")) {
 					walkwayChar = entries[0].charAt(0);
+				}
+				if (entries[2].equals("Card")) {
+					deck.add(new Card(entries[1], CardType.ROOM));
 				}
 			}
 		}
@@ -356,17 +364,59 @@ public class Board {
 		return false;
 	}
 	
-	public void loadConfigFiles() {
+	public void loadConfigFiles() throws BadConfigFormatException, FileNotFoundException {
+		FileReader reader = new FileReader(peopleConfigFile);
+		Scanner readerScanner = new Scanner(reader);
+		while (readerScanner.hasNextLine()) {
+			String[] entries = readerScanner.nextLine().split(", ");    // Split each line using commas as delimiters and parse each entry.
+			if(entries.length != 4 || entries[0].length() == 0 || entries[1].length() == 0 || Integer.parseInt(entries[2]) < 0  || Integer.parseInt(entries[3]) < 0) {
+				readerScanner.close();
+				throw new BadConfigFormatException(peopleConfigFile);
+			} else {
+				deck.add(new Card(entries[0], CardType.PERSON));
+				
+				
+			}
+		}
+		readerScanner.close();
+		
+		FileReader readWeapons = new FileReader(weaponConfigFile);
+		Scanner weaponScanner = new Scanner(readWeapons);
+		while (weaponScanner.hasNextLine()) {
+			String currentWeapon = weaponScanner.nextLine();
+			if(currentWeapon.length() == 0) {
+				weaponScanner.close();
+				throw new BadConfigFormatException(weaponConfigFile);
+			} else {
+				deck.add(new Card(currentWeapon, CardType.WEAPON));
+				
+				
+				
+			}
+		}
+		weaponScanner.close();
 		dealCards();
 	}
-
-	public Set<Card> getCards() {
+	
+	public ArrayList<Card> getCards() {
 		// TODO Auto-generated method stub
-		return new HashSet<Card>();
+		return deck;
 	}
 
 	private void dealCards() {
 		// TODO Auto-generated method stub
 		
 	}
+	public Color convertColor(String strColor) {
+		 Color color;
+		 try {
+		 // We can use reflection to convert the string to a color
+		 Field field = Class.forName("java.awt.Color").getField(strColor.trim());
+		 color = (Color)field.get(null);
+		 } catch (Exception e) {
+		 color = null; // Not defined
+		 }
+		 return color;
+		}
+
 }
