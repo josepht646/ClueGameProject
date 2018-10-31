@@ -129,6 +129,10 @@ public class Board {
 		return targets;
 	}
 	
+	/**
+	 * Get the players.
+	 * @return - ArrayList of players.
+	 */
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
@@ -353,20 +357,35 @@ public class Board {
 		}
 	}
 	
-	//ANSWER and Solution stuff
-	
+	/**
+	 * In development.
+	 */
 	public void selectAnswer() {
 		
 	}
 	
+	/**
+	 * In development.
+	 * @return
+	 */
 	public Card handleSuggestion() {
 		return null;
 	}
 	
+	/**
+	 * In development.
+	 * @param accusation
+	 * @return
+	 */
 	public boolean checkAccusation(Solution accusation) {
 		return false;
 	}
 	
+	/**
+	 * Loads the people and weapon configuration files.
+	 * @throws BadConfigFormatException
+	 * @throws FileNotFoundException
+	 */
 	public void loadConfigFiles() throws BadConfigFormatException, FileNotFoundException {
 		players = new ArrayList<Player>();
 		FileReader peopleReader = new FileReader(peopleConfigFile);
@@ -406,10 +425,17 @@ public class Board {
 		dealCards();
 	}
 	
+	/**
+	 * Get deck of cards.
+	 * @return - ArrayList of Cards
+	 */
 	public ArrayList<Card> getCards() {
 		return deck;
 	}
 
+	/**
+	 * Deals the cards to the players and creates the solution for the game.
+	 */
 	private void dealCards() {
 		Collections.shuffle(deck);
 		Card[] solutionCards = new Card[3];
@@ -438,6 +464,11 @@ public class Board {
 			}
 		}
 	}
+	/**
+	 * Converts string to color
+	 * @param strColor -String representing color
+	 * @return - color object
+	 */
 	public Color convertColor(String strColor) {
 		 Color color;
 		 try {
