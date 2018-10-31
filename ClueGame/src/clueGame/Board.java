@@ -18,8 +18,7 @@ import clueGame.BoardCell;
  */
 public class Board {
 	private static Board theInstance = new Board();    // Variable used for singleton pattern.
-	private String boardConfigFile;
-	private String roomConfigFile;
+	private String boardConfigFile, roomConfigFile, peopleConfigFile, weaponConfigFile;
 	private int numRows;
 	private int numColumns;
 	private Map<Character, String> legend;
@@ -27,6 +26,7 @@ public class Board {
 	private BoardCell[][] board;
 	private Map<BoardCell, Set<BoardCell>> adjList;    // Adjacency list for objects on the board.
 	private Set<BoardCell> visited, targets;
+	private Player[] players;
 	private Solution theAnswer;
 	/**
 	 * Constructor is private to ensure only one instance can be created.
@@ -42,7 +42,19 @@ public class Board {
 		boardConfigFile = fileCSV;
 		roomConfigFile = legendFile;
 	}
-	
+	/**
+	 * Sets file names.
+	 * @param fileCSV - name of the configuration file for the board
+	 * @param legendFile - name of the configuration file for the legend
+	 * @param weaponFile 
+	 * @param peopleFile 
+	 */
+	public void setConfigFiles(String fileCSV, String legendFile, String peopleFile, String weaponFile) {
+		boardConfigFile = fileCSV;
+		roomConfigFile = legendFile;
+		peopleConfigFile = peopleFile;
+		weaponConfigFile = weaponFile;
+	}
 	/**
 	 * Get the singleton board.
 	 * @return - Board object representing the single instance of the Board class.
@@ -112,6 +124,10 @@ public class Board {
 		return targets;
 	}
 	
+	public Player[] getPlayers() {
+		return new Player[6];
+	}
+	
 	/**
 	 * Loads both configuration files.
 	 */
@@ -119,6 +135,7 @@ public class Board {
 		try {
 			loadRoomConfig();
 			loadBoardConfig();
+			loadConfigFiles();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -340,6 +357,16 @@ public class Board {
 	}
 	
 	public void loadConfigFiles() {
+		dealCards();
+	}
+
+	public Set<Card> getCards() {
+		// TODO Auto-generated method stub
+		return new HashSet<Card>();
+	}
+
+	private void dealCards() {
+		// TODO Auto-generated method stub
 		
 	}
 }
