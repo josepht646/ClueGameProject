@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -404,13 +405,36 @@ public class Board {
 	}
 	
 	public ArrayList<Card> getCards() {
-		// TODO Auto-generated method stub
 		return deck;
 	}
 
 	private void dealCards() {
-		// TODO Auto-generated method stub
+		Collections.shuffle(deck);
+		Card[] solutionCards = new Card[3];
 		
+		for (int i = 0; i < deck.size(); ++i) {
+			if (solutionCards[0] == null && deck.get(i).getType() == CardType.PERSON) {
+				solutionCards[0] = deck.get(i);
+			} else if (solutionCards[1] == null && deck.get(i).getType() == CardType.ROOM) {
+				solutionCards[1] = deck.get(i);
+			} else if (solutionCards[2] == null && deck.get(i).getType() == CardType.WEAPON) {
+				solutionCards[2] = deck.get(i);
+			}
+		}
+		theAnswer = new Solution(solutionCards[0].getCardName(), solutionCards[1].getCardName(), solutionCards[2].getCardName());
+		
+		int i = 0;
+		for (Player p : players) {
+			for (int j = 0; j < 3; ++j) {
+				if (deck.get(i) != solutionCards[0] && deck.get(i) != solutionCards[1] && deck.get(i) != solutionCards[2]) {
+					p.addCard(deck.get(i));
+					
+				} else {
+					j -= 1;
+				}
+				i += 1;
+			}
+		}
 	}
 	public Color convertColor(String strColor) {
 		 Color color;
