@@ -140,7 +140,9 @@ public class Board {
 		try {
 			loadRoomConfig();
 			loadBoardConfig();
-			loadConfigFiles();
+			if (peopleConfigFile != null) {
+				loadConfigFiles();
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -367,8 +369,8 @@ public class Board {
 	
 	public void loadConfigFiles() throws BadConfigFormatException, FileNotFoundException {
 		players = new ArrayList<Player>();
-		FileReader reader = new FileReader(peopleConfigFile);
-		Scanner readerScanner = new Scanner(reader);
+		FileReader peopleReader = new FileReader(peopleConfigFile);
+		Scanner readerScanner = new Scanner(peopleReader);
 		while (readerScanner.hasNextLine()) {
 			String[] entries = readerScanner.nextLine().split(", ");    // Split each line using commas as delimiters and parse each entry.
 			if(entries.length != 5 || entries[0].length() == 0 || convertColor(entries[1]) == null|| (!entries[2].equals("C") && !entries[2].equals("H"))) {
