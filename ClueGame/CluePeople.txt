@@ -1,0 +1,6 @@
+Colonel Mustard, YELLOW, C, 5, 0
+Professor Plum, MAGENTA, H, 0, 6
+Reverend Green, GREEN, C, 0, 17
+Ms Scarlett, RED, C, 8, 21
+Mrs Peacock, BLUE, C, 14, 0
+Mrs White, WHITE, C, 22, 14
