@@ -34,6 +34,14 @@ public abstract class Player {
 	public Player() {
 	}
 
+	public void setMyCards(ArrayList<Card> myCards) {
+		this.myCards = myCards;
+	}
+
+	public void setSeenCards(ArrayList<Card> seenCards) {
+		this.seenCards = seenCards;
+	}
+
 	/**
 	 * Get the player's name.
 	 * @return - String representing player's name

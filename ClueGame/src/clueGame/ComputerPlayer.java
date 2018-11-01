@@ -53,7 +53,8 @@ public class ComputerPlayer extends Player {
 			return roomsToMoveTo.get(0);
 		}
 		int i = 0;
-		int location = Board.rng.nextInt(targets.size());
+		Board board = Board.getInstance();
+		int location = board.rng.nextInt(targets.size());
 		for (BoardCell cell : targets) {
 			if (i == location) {
 				return cell;

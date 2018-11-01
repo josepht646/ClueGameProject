@@ -2,13 +2,18 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import clueGame.Board;
 import clueGame.BoardCell;
+import clueGame.Card;
+import clueGame.CardType;
 import clueGame.ComputerPlayer;
 import clueGame.Player;
+import clueGame.Solution;
 
 public class GameActionTests {
 	public static Board board;
@@ -70,5 +75,18 @@ public class GameActionTests {
 				fail("Invalidtarget selected");
 			}
 		assertTrue(loc_11_16 && loc_11_14 && loc_10_15 && loc_12_15);
+	}
+	
+	@Test
+	public void testAccusations() {
+		assertTrue(board.checkAccusation(board.getTheAnswer()));
+		Solution wrongAnswer = new Solution(board.getTheAnswer().person, "saodfhs", board.getTheAnswer().weapon);
+		assertFalse(board.checkAccusation(wrongAnswer));
+		wrongAnswer.person = "saofd";
+		wrongAnswer.room = board.getTheAnswer().room;
+		assertFalse(board.checkAccusation(wrongAnswer));
+		wrongAnswer.weapon = "saofd";
+		wrongAnswer.person = board.getTheAnswer().person;
+		assertFalse(board.checkAccusation(wrongAnswer));
 	}
 }

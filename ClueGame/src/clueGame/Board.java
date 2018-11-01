@@ -34,7 +34,7 @@ public class Board {
 	private ArrayList<Player> players;
 	private ArrayList<Card> deck;
 	private Solution theAnswer;
-	public static Random rng = new Random();
+	public Random rng = new Random();
 	/**
 	 * Constructor is private to ensure only one instance can be created.
 	 */
@@ -451,7 +451,7 @@ public class Board {
 				solutionCards[2] = deck.get(i);
 			}
 		}
-		theAnswer = new Solution(solutionCards[0].getCardName(), solutionCards[1].getCardName(), solutionCards[2].getCardName());
+		setTheAnswer(new Solution(solutionCards[0].getCardName(), solutionCards[1].getCardName(), solutionCards[2].getCardName()));
 		
 		int i = 0;
 		for (Player p : players) {
@@ -466,6 +466,8 @@ public class Board {
 			}
 		}
 	}
+	
+
 	/**
 	 * Converts string to color
 	 * @param strColor -String representing color
@@ -482,5 +484,13 @@ public class Board {
 		 }
 		 return color;
 		}
+
+	public void setTheAnswer(Solution theAnswer) {
+		this.theAnswer = theAnswer;
+	}
+
+	public Solution getTheAnswer() {
+		return theAnswer;
+	}
 
 }
