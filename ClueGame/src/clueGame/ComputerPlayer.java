@@ -1,6 +1,8 @@
 package clueGame;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -39,14 +41,33 @@ public class ComputerPlayer extends Player {
 	 * @return
 	 */
 	public BoardCell pickLocation(Set<BoardCell> targets) {
+		ArrayList<BoardCell> roomsToMoveTo = new ArrayList<BoardCell>();
+		for (BoardCell cell : targets) {
+			if (cell.isDoorway() && cell.getInitial() != lastRoom) {
+				roomsToMoveTo.add(cell);
+			}
+		}
+		if (roomsToMoveTo.size() != 0) {
+			Collections.shuffle(roomsToMoveTo);
+			lastRoom = roomsToMoveTo.get(0).getInitial();
+			return roomsToMoveTo.get(0);
+		}
+		int i = 0;
+		int location = Board.rng.nextInt(targets.size());
+		for (BoardCell cell : targets) {
+			if (i == location) {
+				return cell;
+			}
+			i++;
+		}
 		return null;
 	}
 	
 	/**
 	 * In development.
 	 */
-	public void makeAccusation() {
-		
+	public Card[] makeAccusation() {
+		return null;
 	}
 	
 	/**

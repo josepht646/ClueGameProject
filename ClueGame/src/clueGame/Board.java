@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -33,6 +34,7 @@ public class Board {
 	private ArrayList<Player> players;
 	private ArrayList<Card> deck;
 	private Solution theAnswer;
+	public static Random rng = new Random();
 	/**
 	 * Constructor is private to ensure only one instance can be created.
 	 */
