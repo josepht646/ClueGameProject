@@ -89,4 +89,52 @@ public class GameActionTests {
 		wrongAnswer.person = board.getTheAnswer().person;
 		assertFalse(board.checkAccusation(wrongAnswer));
 	}
+	
+	@Test
+	public void testCreateSuggestion() {
+		ComputerPlayer jason = (ComputerPlayer) board.getPlayers().get(0);
+		jason.setSeenCards(board.getPlayers().get(1).getMyCards());
+		Solution suggestion = jason.createSuggestion();
+		assertEquals(suggestion.room, board.getLegend().get(board.getCellAt(jason.getRow(), jason.getColumn()).getInitial()));
+		assertFalse(jason.getSeenCards().contains(new Card(suggestion.weapon, CardType.WEAPON)));
+		assertFalse(jason.getSeenCards().contains(new Card(suggestion.person, CardType.PERSON)));
+		
+		assertFalse(jason.getMyCards().contains(new Card(suggestion.weapon, CardType.WEAPON)));
+		assertFalse(jason.getMyCards().contains(new Card(suggestion.person, CardType.PERSON)));
+		ArrayList<Card> weaponsToAdd = new ArrayList<Card>();
+		weaponsToAdd.add(new Card("Dagger", CardType.WEAPON));
+		weaponsToAdd.add(new Card("Revolver", CardType.WEAPON));
+		weaponsToAdd.add(new Card("Spade", CardType.WEAPON));
+		ArrayList<Card> peopleToAdd = new ArrayList<Card>();
+		peopleToAdd.add(new Card("Colonel Mustard", CardType.PERSON));
+		peopleToAdd.add(new Card("Professor Plum", CardType.PERSON));
+		peopleToAdd.add(new Card("Reverend Green", CardType.PERSON));
+		jason.setSeenCards(weaponsToAdd);
+		jason.setMyCards(peopleToAdd);
+		boolean weaponCandlestick = false, weaponLeadPipe = false, weaponRope = false, personWhite = false, personScarlett = false, personPeacock = false;
+		for (int i = 0; i < 100; ++i) {
+			suggestion = jason.createSuggestion();
+			if (suggestion.weapon == "Candlestick") {
+				weaponCandlestick = true;
+			}
+			if (suggestion.weapon == "Lead pipe") {
+				weaponLeadPipe = true;
+			}
+			if (suggestion.weapon == "Rope") {
+				weaponRope = true;
+			}
+			if (suggestion.person == "Ms Scarlett") {
+				personScarlett = true;
+			}
+			if (suggestion.person == "Mrs Peacock") {
+				personPeacock = true;
+			}
+			if (suggestion.person == "Mrs White") {
+				personWhite = true;
+			}
+			
+		}
+		assertTrue(weaponCandlestick && weaponRope && weaponLeadPipe);
+		assertTrue(personWhite && personScarlett && personPeacock);
+	}
 }

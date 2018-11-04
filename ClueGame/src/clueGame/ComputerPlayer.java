@@ -74,8 +74,8 @@ public class ComputerPlayer extends Player {
 	/**
 	 * In development.
 	 */
-	public void createSuggestion() {
-		
+	public Solution createSuggestion() {
+		return new Solution(null, null, null);
 	}
 
 	public char getLastRoom() {
