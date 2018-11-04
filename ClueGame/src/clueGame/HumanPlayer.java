@@ -1,6 +1,8 @@
 package clueGame;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Human player for the game.
@@ -24,7 +26,20 @@ public class HumanPlayer extends Player {
 	 */
 	@Override
 	public Card disproveSuggestion(Solution suggestion) {
-		return null;
+		ArrayList<Card> matchingCards = new ArrayList<Card>();
+		if (getMyCards().contains(new Card(suggestion.person, CardType.PERSON))) {
+			matchingCards.add(new Card(suggestion.person, CardType.PERSON));
+		}
+		if (getMyCards().contains(new Card(suggestion.weapon, CardType.WEAPON))) {
+			matchingCards.add(new Card(suggestion.weapon, CardType.WEAPON));
+		}
+		if (getMyCards().contains(new Card(suggestion.room, CardType.ROOM))) {
+			matchingCards.add(new Card(suggestion.room, CardType.ROOM));
+		}
+		if (matchingCards.size() == 0) {
+			return null;
+		}
+		Collections.shuffle(matchingCards);
+		return matchingCards.get(0);
 	}
-
 }

@@ -371,6 +371,14 @@ public class Board {
 	 * @return
 	 */
 	public Card handleSuggestion(Solution suggestion, Player accuser) {
+		for (Player p : players) {
+			if (p != accuser) {
+				Card c = p.disproveSuggestion(suggestion);
+				if (c != null) {
+					return c;
+				}
+			}
+		}
 		return null;
 	}
 	

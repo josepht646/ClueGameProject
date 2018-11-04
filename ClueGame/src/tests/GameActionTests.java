@@ -179,23 +179,43 @@ public class GameActionTests {
 	
 	@Test
 	public void testHandleSuggestion() {
-		assertEquals(null, board.handleSuggestion(board.getTheAnswer(), board.getPlayers().get(0)));
+		ArrayList<Card> cards = new ArrayList<Card>();
+		cards.add(new Card("Dungeon", CardType.ROOM));
+		board.getPlayers().get(0).setMyCards(cards);
+		cards = new ArrayList<Card>();
+		cards.add(new Card("Dagger", CardType.WEAPON));
+		board.getPlayers().get(1).setMyCards(cards);
+		cards = new ArrayList<Card>();
+		cards.add(new Card("Colonel Mustard", CardType.PERSON));
+		board.getPlayers().get(2).setMyCards(cards);
+		cards = new ArrayList<Card>();
+		cards.add(new Card("Attic", CardType.ROOM));
+		board.getPlayers().get(3).setMyCards(cards);
+		cards = new ArrayList<Card>();
+		cards.add(new Card("Mrs White", CardType.PERSON));
+		board.getPlayers().get(4).setMyCards(cards);
+		cards = new ArrayList<Card>();
+		cards.add(new Card("Lead pipe", CardType.WEAPON));
+		board.getPlayers().get(5).setMyCards(cards);
 		
-		Player tempPlayer = board.getPlayers().get(0);
-		Solution suggestion = new Solution(tempPlayer.getMyCards().get(0).getCardName(), tempPlayer.getMyCards().get(1).getCardName(), tempPlayer.getMyCards().get(2).getCardName());
-		assertEquals(null, board.handleSuggestion(suggestion, tempPlayer));
+		Solution suggestion = new Solution("Professor Plum", "Court Yard", "Rope");
+		assertEquals(null, board.handleSuggestion(suggestion, board.getPlayers().get(0)));
 		
-		Player tempHPlayer = board.getPlayers().get(1);
-		Solution suggestionHuman = new Solution(tempHPlayer.getMyCards().get(0).getCardName(), board.getTheAnswer().room, board.getTheAnswer().weapon);
-		assertEquals(tempHPlayer.getMyCards().get(0), board.handleSuggestion(suggestionHuman, tempPlayer));
+		suggestion.room = "Dungeon";
+		assertEquals(null, board.handleSuggestion(suggestion, board.getPlayers().get(0)));
 		
-		assertEquals(null, board.handleSuggestion(suggestionHuman, tempHPlayer));
-		suggestion.person = board.getPlayers().get(2).getMyCards().get(0).getCardName();
-		suggestion.weapon = board.getPlayers().get(3).getMyCards().get(0).getCardName();
-		assertEquals(tempPlayer.getMyCards().get(1), board.handleSuggestion(suggestion, tempHPlayer));
+		suggestion.room = "Court Yard";
+		suggestion.weapon = "Dagger";
+		assertEquals(new Card("Dagger", CardType.WEAPON), board.handleSuggestion(suggestion, board.getPlayers().get(0)));
 		
-		suggestion.person = tempHPlayer.getMyCards().get(0).getCardName();
-		assertEquals(tempPlayer.getMyCards().get(1), board.handleSuggestion(suggestion, board.getPlayers().get(4)));
+		assertEquals(null, board.handleSuggestion(suggestion, board.getPlayers().get(1)));
 		
+		suggestion.room = "Attic";
+		suggestion.weapon = "Lead pipe";
+		assertEquals(new Card("Attic", CardType.ROOM), board.handleSuggestion(suggestion, board.getPlayers().get(1)));
+		
+		suggestion.weapon = "Dagger";
+		suggestion.room = "Dungeon";
+		assertEquals(new Card("Dungeon", CardType.ROOM), board.handleSuggestion(suggestion, board.getPlayers().get(3)));
 	}
 }
