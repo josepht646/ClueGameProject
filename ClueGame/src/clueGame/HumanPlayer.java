@@ -23,6 +23,7 @@ public class HumanPlayer extends Player {
 	
 	/**
 	 * In development
+	 * For now this method emulates the implementation used by the Computer Player.
 	 */
 	@Override
 	public Card disproveSuggestion(Solution suggestion) {

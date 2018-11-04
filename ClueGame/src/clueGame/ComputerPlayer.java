@@ -23,12 +23,17 @@ public class ComputerPlayer extends Player {
 		super(playerName, row, column, color);
 	}
 	
+	/**
+	 * Default Computer Player Constructor.
+	 */
 	public ComputerPlayer() {
 		super();
 	}
 
 	/**
-	 * In development.
+	 * Disproves suggestion if possible.
+	 * @param suggestion - Solution object representing the suggestion to disprove.
+	 * @return - Card object that disproves suggestion or null.
 	 */
 	@Override
 	public Card disproveSuggestion(Solution suggestion) {
@@ -50,9 +55,9 @@ public class ComputerPlayer extends Player {
 	}
 	
 	/**
-	 * In development.
-	 * @param targets
-	 * @return
+	 * Picks a location on the board to move to.
+	 * @param targets - Set of BoardCell objects the player can move to.
+	 * @return - BoardCell to move to.
 	 */
 	public BoardCell pickLocation(Set<BoardCell> targets) {
 		ArrayList<BoardCell> roomsToMoveTo = new ArrayList<BoardCell>();
@@ -85,8 +90,10 @@ public class ComputerPlayer extends Player {
 		return null;
 	}
 	
+
 	/**
-	 * In development.
+	 * Creates a suggestion based on the players location and the cards it has encountered.
+	 * @return - Solution object representing the suggestion.
 	 */
 	public Solution createSuggestion() {
 		Board board = Board.getInstance();
@@ -107,10 +114,18 @@ public class ComputerPlayer extends Player {
 		return suggestion;
 	}
 	
+	/**
+	 * Gets the last room the player was in.
+	 * @return - Char representing the last room.
+	 */
 	public char getLastRoom() {
 		return lastRoom;
 	}
 
+	/**
+	 * Set the last room the player was in.
+	 * @param lastRoom - Char representing a room.
+	 */
 	public void setLastRoom(char lastRoom) {
 		this.lastRoom = lastRoom;
 	}

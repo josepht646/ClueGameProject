@@ -367,8 +367,8 @@ public class Board {
 	}
 	
 	/**
-	 * In development.
-	 * @return
+	 * Handles the suggestion. Compares it to the players ability to disprove it.
+	 * @return - Card that disproves suggestion, or null.
 	 */
 	public Card handleSuggestion(Solution suggestion, Player accuser) {
 		for (Player p : players) {

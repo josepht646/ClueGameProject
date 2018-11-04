@@ -12,9 +12,13 @@ import clueGame.BoardCell;
 import clueGame.Card;
 import clueGame.CardType;
 import clueGame.ComputerPlayer;
-import clueGame.Player;
 import clueGame.Solution;
-
+/**
+ * Tests for game action logic.
+ * @author Joseph Thurston
+ * @author Thomas Depke
+ *
+ */
 public class GameActionTests {
 	public static Board board;
 	
@@ -28,12 +32,15 @@ public class GameActionTests {
 		board.initialize();
 	}
 	
+	/**
+	 * Test target selection that is random.
+	 */
 	@Test
 	public void testRandomTargetSelection() {
 		ComputerPlayer testPlayer = new ComputerPlayer();
 		board.calcTargets(7, 14, 2);
 		boolean loc_6_13 = false, loc_7_12 = false, loc_6_15 = false, loc_7_16 = false, loc_9_14 = false, loc_8_15 = false;
-		for (int i = 0; i < 200; i++) {
+		for (int i = 0; i < 200; i++) {    // if no rooms in list, select randomly
 			BoardCell selected = testPlayer.pickLocation(board.getTargets());
 			if (selected ==board.getCellAt(6, 13))
 				loc_6_13 = true;
@@ -53,15 +60,18 @@ public class GameActionTests {
 		assertTrue(loc_6_13 && loc_7_12 && loc_6_15 && loc_7_16 && loc_9_14 && loc_8_15);
 	}
 	
+	/**
+	 * Test room targeting.
+	 */
 	@Test
 	public void testLastRoomTargetSelection() {
 		ComputerPlayer testPlayer = new ComputerPlayer();
 		testPlayer.setLastRoom('C');
 		board.calcTargets(11, 15, 1);
-		assertEquals(testPlayer.pickLocation(board.getTargets()), board.getCellAt(11, 16));
+		assertEquals(testPlayer.pickLocation(board.getTargets()), board.getCellAt(11, 16));    // if room in list that was not just visited, must select it
 		testPlayer.setLastRoom('D');
 		boolean loc_11_16 = false, loc_11_14 = false, loc_10_15 = false, loc_12_15 = false;
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 100; i++) {    // if room just visited is in list, each target (including room) selected randomly
 			BoardCell selected = testPlayer.pickLocation(board.getTargets());
 			if (selected ==board.getCellAt(11, 16))
 				loc_11_16 = true;
@@ -77,27 +87,33 @@ public class GameActionTests {
 		assertTrue(loc_11_16 && loc_11_14 && loc_10_15 && loc_12_15);
 	}
 	
+	/**
+	 * Test accusations are correct.
+	 */
 	@Test
 	public void testAccusations() {
-		assertTrue(board.checkAccusation(board.getTheAnswer()));
+		assertTrue(board.checkAccusation(board.getTheAnswer()));    // solution that is correct
 		Solution wrongAnswer = new Solution(board.getTheAnswer().person, "saodfhs", board.getTheAnswer().weapon);
-		assertFalse(board.checkAccusation(wrongAnswer));
+		assertFalse(board.checkAccusation(wrongAnswer));    // solution with wrong person
 		wrongAnswer.person = "saofd";
 		wrongAnswer.room = board.getTheAnswer().room;
-		assertFalse(board.checkAccusation(wrongAnswer));
+		assertFalse(board.checkAccusation(wrongAnswer));    // solution with wrong weapon
 		wrongAnswer.weapon = "saofd";
 		wrongAnswer.person = board.getTheAnswer().person;
-		assertFalse(board.checkAccusation(wrongAnswer));
+		assertFalse(board.checkAccusation(wrongAnswer));    // solution with wrong room
 	}
 	
+	/**
+	 * Test that ComputerPlayer makes proper suggestions.
+	 */
 	@Test
 	public void testCreateSuggestion() {
 		ComputerPlayer jason = (ComputerPlayer) board.getPlayers().get(0);
 		jason.setSeenCards(board.getPlayers().get(1).getMyCards());
 		Solution suggestion = jason.createSuggestion();
-		assertEquals(suggestion.room, board.getLegend().get(board.getCellAt(jason.getRow(), jason.getColumn()).getInitial()));
-		assertFalse(jason.getSeenCards().contains(new Card(suggestion.weapon, CardType.WEAPON)));
-		assertFalse(jason.getSeenCards().contains(new Card(suggestion.person, CardType.PERSON)));
+		assertEquals(suggestion.room, board.getLegend().get(board.getCellAt(jason.getRow(), jason.getColumn()).getInitial()));    // Room matches current location
+		assertFalse(jason.getSeenCards().contains(new Card(suggestion.weapon, CardType.WEAPON)));    // If only one weapon not seen, it's selected
+		assertFalse(jason.getSeenCards().contains(new Card(suggestion.person, CardType.PERSON)));    // If only one person not seen, it's selected
 		
 		assertFalse(jason.getMyCards().contains(new Card(suggestion.weapon, CardType.WEAPON)));
 		assertFalse(jason.getMyCards().contains(new Card(suggestion.person, CardType.PERSON)));
@@ -134,10 +150,13 @@ public class GameActionTests {
 			}
 			
 		}
-		assertTrue(weaponCandlestick && weaponRope && weaponLeadPipe);
-		assertTrue(personWhite && personScarlett && personPeacock);
+		assertTrue(weaponCandlestick && weaponRope && weaponLeadPipe);    // If multiple weapons not seen, one of them is randomly selected
+		assertTrue(personWhite && personScarlett && personPeacock);    // If multiple persons not seen, one of them is randomly selected
 	}
 	
+	/**
+	 * Test if computer players can disprove suggestions properly.
+	 */
 	@Test
 	public void testDisproveSuggestion() {
 		ComputerPlayer jason = new ComputerPlayer();
@@ -153,17 +172,17 @@ public class GameActionTests {
 		
 		Solution suggestion = new Solution("Colonel Mustard", "Attic", "Rope");
 		
-		assertEquals(null, jason.disproveSuggestion(suggestion));
+		assertEquals(null, jason.disproveSuggestion(suggestion));    // If player has no matching cards, null is returned
 		
 		suggestion.person = "Professor Plum";
 		
-		assertEquals(new Card("Professor Plum", CardType.PERSON), jason.disproveSuggestion(suggestion));
+		assertEquals(new Card("Professor Plum", CardType.PERSON), jason.disproveSuggestion(suggestion));    // If player has only one matching card it should be returned
 		
 		suggestion.room = "Dungeon";
 		suggestion.weapon = "Dagger";
 		
 		boolean disproveRoom = false, disprovePerson = false, disproveWeapon = false;
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 1000; i++) {    // If players has >1 matching card, returned card should be chosen randomly
 			if(jason.disproveSuggestion(suggestion).getCardName().equals("Professor Plum")) {
 				disprovePerson = true;
 			}
@@ -177,6 +196,9 @@ public class GameActionTests {
 		assertTrue(disproveRoom && disproveWeapon && disprovePerson);
 	}
 	
+	/**
+	 * Test if Board can handle the suggestions from the players.
+	 */
 	@Test
 	public void testHandleSuggestion() {
 		ArrayList<Card> cards = new ArrayList<Card>();
@@ -199,23 +221,23 @@ public class GameActionTests {
 		board.getPlayers().get(5).setMyCards(cards);
 		
 		Solution suggestion = new Solution("Professor Plum", "Court Yard", "Rope");
-		assertEquals(null, board.handleSuggestion(suggestion, board.getPlayers().get(0)));
+		assertEquals(null, board.handleSuggestion(suggestion, board.getPlayers().get(0)));    // Suggestion no one can disprove returns null
 		
 		suggestion.room = "Dungeon";
-		assertEquals(null, board.handleSuggestion(suggestion, board.getPlayers().get(0)));
+		assertEquals(null, board.handleSuggestion(suggestion, board.getPlayers().get(0)));    // Suggestion only accusing player can disprove returns null
 		
 		suggestion.room = "Court Yard";
 		suggestion.weapon = "Dagger";
-		assertEquals(new Card("Dagger", CardType.WEAPON), board.handleSuggestion(suggestion, board.getPlayers().get(0)));
+		assertEquals(new Card("Dagger", CardType.WEAPON), board.handleSuggestion(suggestion, board.getPlayers().get(0)));    // Suggestion only human can disprove returns answer
 		
-		assertEquals(null, board.handleSuggestion(suggestion, board.getPlayers().get(1)));
+		assertEquals(null, board.handleSuggestion(suggestion, board.getPlayers().get(1)));    // Suggestion only human can disprove, but human is accuser, returns null
 		
 		suggestion.room = "Attic";
 		suggestion.weapon = "Lead pipe";
-		assertEquals(new Card("Attic", CardType.ROOM), board.handleSuggestion(suggestion, board.getPlayers().get(1)));
+		assertEquals(new Card("Attic", CardType.ROOM), board.handleSuggestion(suggestion, board.getPlayers().get(1)));    // Suggestion that two players can disprove, correct player (based on starting with next player in list) returns answer
 		
 		suggestion.weapon = "Dagger";
 		suggestion.room = "Dungeon";
-		assertEquals(new Card("Dungeon", CardType.ROOM), board.handleSuggestion(suggestion, board.getPlayers().get(3)));
+		assertEquals(new Card("Dungeon", CardType.ROOM), board.handleSuggestion(suggestion, board.getPlayers().get(3)));    // Suggestion that human and another player can disprove, other player is next in list, ensure other player returns answer
 	}
 }

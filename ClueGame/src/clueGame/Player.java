@@ -31,13 +31,24 @@ public abstract class Player {
 		seenCards = new ArrayList<Card>();
 	}
 	
+	/**
+	 * Default Player constructor.
+	 */
 	public Player() {
 	}
 
+	/**
+	 * Sets the cards the player has.
+	 * @param myCards - ArrayList of Cards
+	 */
 	public void setMyCards(ArrayList<Card> myCards) {
 		this.myCards = myCards;
 	}
 
+	/**
+	 * Set the cards the player has seen.
+	 * @param seenCards - ArrayList of Cards
+	 */
 	public void setSeenCards(ArrayList<Card> seenCards) {
 		this.seenCards = seenCards;
 	}
@@ -99,9 +110,9 @@ public abstract class Player {
 	}
 
 	/**
-	 * In development.
-	 * @param suggestion
-	 * @return
+	 * Disproves suggestion if possible.
+	 * @param suggestion - Solution object representing suggestion to disprove
+	 * @return - Card that disproves suggestion or null.
 	 */
 	public abstract Card disproveSuggestion(Solution suggestion);
 }
