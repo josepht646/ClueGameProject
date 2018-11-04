@@ -75,9 +75,24 @@ public class ComputerPlayer extends Player {
 	 * In development.
 	 */
 	public Solution createSuggestion() {
-		return new Solution(null, null, null);
+		Board board = Board.getInstance();
+		ArrayList<Card> deck = board.getCards();
+		Collections.shuffle(deck);
+		Solution suggestion = new Solution("", board.getLegend().get(board.getCellAt(getRow(), getColumn()).getInitial()), "");
+		for (Card c : deck) {
+			if (!getMyCards().contains(c) && !getSeenCards().contains(c) && c.getType() != CardType.ROOM) {
+				if (c.getType() == CardType.PERSON && suggestion.person.equals("")) {
+					suggestion.person = c.getCardName();
+				} else if (c.getType() == CardType.WEAPON && suggestion.weapon.equals("")) {
+					suggestion.weapon = c.getCardName();
+				} else {
+					break;
+				}
+			}
+		}
+		return suggestion;
 	}
-
+	
 	public char getLastRoom() {
 		return lastRoom;
 	}

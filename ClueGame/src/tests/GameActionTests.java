@@ -112,24 +112,24 @@ public class GameActionTests {
 		jason.setSeenCards(weaponsToAdd);
 		jason.setMyCards(peopleToAdd);
 		boolean weaponCandlestick = false, weaponLeadPipe = false, weaponRope = false, personWhite = false, personScarlett = false, personPeacock = false;
-		for (int i = 0; i < 100; ++i) {
+		for (int i = 0; i < 1000; ++i) {
 			suggestion = jason.createSuggestion();
-			if (suggestion.weapon == "Candlestick") {
+			if (suggestion.weapon.equals("Candlestick")) {
 				weaponCandlestick = true;
 			}
-			if (suggestion.weapon == "Lead pipe") {
+			if (suggestion.weapon.equals("Lead pipe")) {
 				weaponLeadPipe = true;
 			}
-			if (suggestion.weapon == "Rope") {
+			if (suggestion.weapon.equals("Rope")) {
 				weaponRope = true;
 			}
-			if (suggestion.person == "Ms Scarlett") {
+			if (suggestion.person.equals("Ms Scarlett")) {
 				personScarlett = true;
 			}
-			if (suggestion.person == "Mrs Peacock") {
+			if (suggestion.person.equals("Mrs Peacock")) {
 				personPeacock = true;
 			}
-			if (suggestion.person == "Mrs White") {
+			if (suggestion.person.equals("Mrs White")) {
 				personWhite = true;
 			}
 			
