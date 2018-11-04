@@ -176,4 +176,26 @@ public class GameActionTests {
 		}
 		assertTrue(disproveRoom && disproveWeapon && disprovePerson);
 	}
+	
+	@Test
+	public void testHandleSuggestion() {
+		assertEquals(null, board.handleSuggestion(board.getTheAnswer(), board.getPlayers().get(0)));
+		
+		Player tempPlayer = board.getPlayers().get(0);
+		Solution suggestion = new Solution(tempPlayer.getMyCards().get(0).getCardName(), tempPlayer.getMyCards().get(1).getCardName(), tempPlayer.getMyCards().get(2).getCardName());
+		assertEquals(null, board.handleSuggestion(suggestion, tempPlayer));
+		
+		Player tempHPlayer = board.getPlayers().get(1);
+		Solution suggestionHuman = new Solution(tempHPlayer.getMyCards().get(0).getCardName(), board.getTheAnswer().room, board.getTheAnswer().weapon);
+		assertEquals(tempHPlayer.getMyCards().get(0), board.handleSuggestion(suggestionHuman, tempPlayer));
+		
+		assertEquals(null, board.handleSuggestion(suggestionHuman, tempHPlayer));
+		suggestion.person = board.getPlayers().get(2).getMyCards().get(0).getCardName();
+		suggestion.weapon = board.getPlayers().get(3).getMyCards().get(0).getCardName();
+		assertEquals(tempPlayer.getMyCards().get(1), board.handleSuggestion(suggestion, tempHPlayer));
+		
+		suggestion.person = tempHPlayer.getMyCards().get(0).getCardName();
+		assertEquals(tempPlayer.getMyCards().get(1), board.handleSuggestion(suggestion, board.getPlayers().get(4)));
+		
+	}
 }
