@@ -375,12 +375,12 @@ public class Board {
 	}
 	
 	/**
-	 * In development.
-	 * @param accusation
-	 * @return
+	 * Compares person, room, and weapon of accusation to those of the solution.
+	 * @param accusation - Solution object representing accusation
+	 * @return - True or False
 	 */
 	public boolean checkAccusation(Solution accusation) {
-		return false;
+		return (accusation.person == theAnswer.person) && (accusation.room == theAnswer.room) && (accusation.weapon == theAnswer.weapon);
 	}
 	
 	/**

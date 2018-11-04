@@ -89,4 +89,6 @@ public class GameSetupTests {
 		assertEquals(board.getPlayers().get(5).getRow(), 22);
 		assertEquals(board.getPlayers().get(5).getColumn(), 14);
 	}
+	
+	
 }
