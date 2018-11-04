@@ -137,4 +137,43 @@ public class GameActionTests {
 		assertTrue(weaponCandlestick && weaponRope && weaponLeadPipe);
 		assertTrue(personWhite && personScarlett && personPeacock);
 	}
+	
+	@Test
+	public void testDisproveSuggestion() {
+		ComputerPlayer jason = new ComputerPlayer();
+		ArrayList<Card> jasonCards = new ArrayList<Card>();
+		ArrayList<Card> jasonSeen = new ArrayList<Card>();
+		jasonCards.add(new Card("Professor Plum", CardType.PERSON));
+		jasonCards.add(new Card("Dungeon", CardType.ROOM));
+		jasonCards.add(new Card("Dagger", CardType.WEAPON));
+		jasonSeen.add(new Card("Colonel Mustard", CardType.PERSON));
+		
+		jason.setMyCards(jasonCards);
+		jason.setSeenCards(jasonSeen);
+		
+		Solution suggestion = new Solution("Colonel Mustard", "Attic", "Rope");
+		
+		assertEquals(null, jason.disproveSuggestion(suggestion));
+		
+		suggestion.person = "Professor Plum";
+		
+		assertEquals(new Card("Professor Plum", CardType.PERSON), jason.disproveSuggestion(suggestion));
+		
+		suggestion.room = "Dungeon";
+		suggestion.weapon = "Dagger";
+		
+		boolean disproveRoom = false, disprovePerson = false, disproveWeapon = false;
+		for (int i = 0; i < 1000; i++) {
+			if(jason.disproveSuggestion(suggestion).getCardName().equals("Professor Plum")) {
+				disprovePerson = true;
+			}
+			if (jason.disproveSuggestion(suggestion).getCardName().equals("Dungeon")) {
+				disproveRoom = true;
+			}
+			if (jason.disproveSuggestion(suggestion).getCardName().equals("Dagger")) {
+				disproveWeapon = true;
+			}
+		}
+		assertTrue(disproveRoom && disproveWeapon && disprovePerson);
+	}
 }
