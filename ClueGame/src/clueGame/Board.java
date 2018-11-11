@@ -1,6 +1,8 @@
 package clueGame;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Field;
@@ -13,6 +15,8 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
+import javax.swing.JPanel;
+
 import clueGame.BoardCell;
 
 /**
@@ -21,7 +25,7 @@ import clueGame.BoardCell;
  * @author Thomas Depke
  *
  */
-public class Board {
+public class Board extends JPanel {
 	private static Board theInstance = new Board();    // Variable used for singleton pattern.
 	private String boardConfigFile, roomConfigFile, peopleConfigFile, weaponConfigFile;
 	private int numRows;
@@ -222,27 +226,27 @@ public class Board {
 				}
 				if (entries[col].length() == 1) {    // Else if cell ID is length 1, it must be a walkway/room/closet and not a door.
 					if (entries[col].charAt(0) == walkwayChar) {
-						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.NONE, true);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.NONE, true, false);
 					} else {
-						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.NONE, false);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.NONE, false, false);
 					}
 				} else if (entries[col].length() == 2) {    // Else if cell ID is length 2, it must be a door or room label.
 					char dir = entries[col].charAt(1);
 					switch(dir) {
 					case 'R':
-						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.RIGHT, false);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.RIGHT, false, false);
 					break;
 					case 'L':
-						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.LEFT, false);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.LEFT, false, false);
 					break;
 					case 'U':
-						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.UP, false);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.UP, false, false);
 					break;
 					case 'D':
-						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.DOWN, false);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.DOWN, false, false);
 					break;
 					case 'N':
-						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.NONE, false);
+						board[row][col] = new BoardCell(row, col, entries[col].charAt(0), DoorDirection.NONE, false, true);
 					break;
 					default:
 						readerScanner.close();
@@ -499,6 +503,17 @@ public class Board {
 
 	public Solution getTheAnswer() {
 		return theAnswer;
+	}
+	
+	public void paintComponent(Graphics g) {
+		for (int i = numRows-1; i >= 0; i--) {
+			for (int j = numColumns-1; j >= 0; j--) {
+				board[i][j].draw(g);
+			}
+		}
+		for (Player p: players) {
+			p.draw(g);
+		}
 	}
 
 }

@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 /**
  * Represents players in the game Clue.
@@ -115,4 +116,13 @@ public abstract class Player {
 	 * @return - Card that disproves suggestion or null.
 	 */
 	public abstract Card disproveSuggestion(Solution suggestion);
+
+	public void draw(Graphics g) {
+		g.setColor(color);
+		g.fillOval(column*BoardCell.WIDTH, row*BoardCell.HEIGHT, BoardCell.WIDTH, BoardCell.HEIGHT);
+		g.setColor(Color.BLACK);
+		g.drawOval(column*BoardCell.WIDTH, row*BoardCell.HEIGHT, BoardCell.WIDTH, BoardCell.HEIGHT);
+
+		
+	}
 }
