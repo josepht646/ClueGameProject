@@ -12,10 +12,18 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-
+/**
+ * The Clue Game class sets up the game and creates the gui.
+ * @author Joseph Thurston
+ * @author Thomas Depke
+ *
+ */
 public class ClueGame extends JPanel {
 	private Board board;
 	private DetectiveNotesDialog dialog;
+	/**
+	 * Sets up the board and the dialog.
+	 */
 	public ClueGame() {
 		setBackground (Color.BLACK);
 		board = Board.getInstance();
@@ -24,10 +32,17 @@ public class ClueGame extends JPanel {
 		dialog = new DetectiveNotesDialog();
 		dialog.pack();
 	}
+	/**
+	 * Draws the board.
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		board.paintComponent(g);
 	}
+	/**
+	 * Creates the file menu.
+	 * @return - JMenu object.
+	 */
 	public JMenu createFileMenu() {
 		JMenu menu = new JMenu("File");
 		menu.add(createDetectiveNotesItem());
@@ -54,6 +69,10 @@ public class ClueGame extends JPanel {
 		item.addActionListener(new MenuItemListener());
 		return item;
 	}
+	/**
+	 * Main for the game.
+	 * @param args - Not used.
+	 */
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("ClueGame");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

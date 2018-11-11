@@ -1,20 +1,24 @@
 package clueGame;
 
 import java.awt.GridLayout;
-import java.util.Map;
-
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-
+/**
+ * The Detective Notes class creates the custom dialog interface for the player to keep track of cards they've seen.
+ * @author Joseph Thurston
+ * @author Thomas Depke
+ *
+ */
 public class DetectiveNotesDialog extends JDialog {
 	private Board board;
 	private int numWeapons, numRooms, numPeople;
+	/**
+	 * Construct the dialog and add each of the six panels.
+	 */
 	public DetectiveNotesDialog() {
 		board = Board.getInstance();
 		setLayout(new GridLayout(3,2));

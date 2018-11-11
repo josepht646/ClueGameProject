@@ -96,6 +96,10 @@ public class ControlGUI extends JPanel {
 		return panel;
 		
 	}
+	/**
+	 * Tests the control gui.
+	 * @param args - Not used.
+	 */
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();    // Create a JFrame and display the GUI.
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
