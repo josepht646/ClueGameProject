@@ -1,7 +1,6 @@
 package clueGame;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -143,6 +142,10 @@ public class Board extends JPanel {
 		return players;
 	}
 	
+	/**
+	 * Return the player controlled by the user.
+	 * @return - HumanPlayer object
+	 */
 	public HumanPlayer getHumanPlayer() {
 		for (Player p: players) {
 			if (p instanceof HumanPlayer) {

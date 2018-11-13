@@ -76,6 +76,10 @@ public class ClueGame extends JPanel {
 		item.addActionListener(new MenuItemListener());
 		return item;
 	}
+	/**
+	 * Creates JPanel displaying the player's cards.
+	 * @return - JPanel component
+	 */
 	public JPanel createMyCardsDisplay() {
 		JPanel panel = new JPanel();
 		
@@ -84,6 +88,7 @@ public class ClueGame extends JPanel {
 		JPanel people = new JPanel();
 		JPanel rooms = new JPanel();
 		JPanel weapons = new JPanel();
+		
 		for (Card c: board.getHumanPlayer().getMyCards()) {
 			switch (c.getType()) {
 			case PERSON:
@@ -106,16 +111,22 @@ public class ClueGame extends JPanel {
 				break;
 			}
 		}
+		
 		people.setLayout(new GridLayout(0, 1));
 		people.setBorder(new TitledBorder (new EtchedBorder(), "People"));
+		
 		rooms.setLayout(new GridLayout(0, 1));
 		rooms.setBorder(new TitledBorder (new EtchedBorder(), "Rooms"));
+		
 		weapons.setLayout(new GridLayout(0, 1));
 		weapons.setBorder(new TitledBorder (new EtchedBorder(), "Weapons"));
+		
 		panel.add(people);
 		panel.add(rooms);
 		panel.add(weapons);
+		
 		panel.setBorder(new TitledBorder (new EtchedBorder(), "My Cards"));
+		
 		return panel;
 	}
 	/**
@@ -125,18 +136,24 @@ public class ClueGame extends JPanel {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("ClueGame");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		ClueGame gameBoard = new ClueGame();
 		gameBoard.setPreferredSize(new Dimension(gameBoard.board.getNumColumns()*BoardCell.WIDTH, gameBoard.board.getNumRows()*BoardCell.HEIGHT));
 		JPanel myCardsDisplay = gameBoard.createMyCardsDisplay();
+		
 		ControlGUI gui = new ControlGUI();
+		
 		frame.add(myCardsDisplay, BorderLayout.EAST);
 		frame.add(gui, BorderLayout.SOUTH);
 		frame.add(gameBoard, BorderLayout.WEST);
+		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(gameBoard.createFileMenu());
 		frame.setJMenuBar(menuBar);
+		
 		frame.pack();
 		frame.setVisible(true);
+		
 		JFrame splashScreen = new JFrame();
 		JOptionPane.showMessageDialog(splashScreen, "You are " + gameBoard.board.getHumanPlayer().getPlayerName() + ", press okay to begin." , "Welcome to Clue", JOptionPane.INFORMATION_MESSAGE);
 		
