@@ -143,6 +143,14 @@ public class Board extends JPanel {
 		return players;
 	}
 	
+	public HumanPlayer getHumanPlayer() {
+		for (Player p: players) {
+			if (p instanceof HumanPlayer) {
+				return (HumanPlayer) p;
+			}
+		}
+		return null;
+	}
 	/**
 	 * Loads both configuration files.
 	 */
