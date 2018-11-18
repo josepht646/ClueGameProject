@@ -45,6 +45,9 @@ public class HumanPlayer extends Player {
 		return matchingCards.get(0);
 	}
 	
+	/**
+	 * Sets the targets to highlight positions to move to.
+	 */
 	@Override
 	public BoardCell pickLocation(Set<BoardCell> targets) {
 		for (BoardCell cell : targets) {

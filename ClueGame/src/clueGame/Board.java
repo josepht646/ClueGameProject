@@ -502,16 +502,27 @@ public class Board extends JPanel {
 		 return color;
 		}
 
+	/**
+	 * Sets the answer to the game.
+	 * @param theAnswer - Solution Object
+	 */
 	public void setTheAnswer(Solution theAnswer) {
 		this.theAnswer = theAnswer;
 	}
 
+	/**
+	 * Gets the answer
+	 * @return - Solution Object
+	 */
 	public Solution getTheAnswer() {
 		return theAnswer;
 	}
 	
+	/**
+	 * Tells the BoardCells and Players to draw themselves.
+	 */
+	@Override
 	public void paintComponent(Graphics g) {
-		System.out.println("paint in board called");
 		for (int i = numRows-1; i >= 0; i--) {
 			for (int j = numColumns-1; j >= 0; j--) {
 				board[i][j].draw(g);
@@ -522,9 +533,31 @@ public class Board extends JPanel {
 		}
 	}
 	
-	public void nextPlayer() {
-		System.out.println("e");
-		calcTargets(getHumanPlayer().getRow(), getHumanPlayer().getColumn(), 5);
-		getHumanPlayer().pickLocation(getTargets());
+	/**
+	 * Sets up target list for current players turn and moves players controlled by computer.
+	 */
+	public void currentPlayerTurn(int currentPlayer, int roll) {
+		calcTargets(players.get(currentPlayer).getRow(), players.get(currentPlayer).getColumn(), roll);
+		BoardCell cellLocation = players.get(currentPlayer).pickLocation(getTargets());
+		if (players.get(currentPlayer) instanceof ComputerPlayer) {
+			players.get(currentPlayer).setRow(cellLocation.getRow());
+			players.get(currentPlayer).setColumn(cellLocation.getColumn());
+		}
+		
+	}
+	
+	/**
+	 * Gets the BoardCell clicked on by the mouse
+	 * @param mouseX - mouse location x
+	 * @param mouseY - mouse location y
+	 * @return - BoardCell object
+	 */
+	public BoardCell getTargetClicked(int mouseX, int mouseY) {
+		for (BoardCell cell : targets) {
+			if (cell.containsClick(mouseX, mouseY)) {
+				return cell;
+			}
+		}
+		return null;
 	}
 }

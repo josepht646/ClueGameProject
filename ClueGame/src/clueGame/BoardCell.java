@@ -2,6 +2,8 @@ package clueGame;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 
 /**
  * The BoardCell class represents a cell in a board with row, column, label, and door direction.
@@ -128,6 +130,10 @@ public class BoardCell {
 				+ ", isWalkway=" + isWalkway + "]";
 	}
 	
+	/**
+	 * Draws this BoardCell to a graphics object.
+	 * @param g - Graphics object
+	 */
 	public void draw(Graphics g) {
 		int startX = column*WIDTH;
 		int startY = row*HEIGHT;
@@ -171,8 +177,20 @@ public class BoardCell {
 			}
 			
 		}
-		
-		
-		
+	}
+	
+	/**
+	 * Returns true only if the mouse coordinates lie inside the BoardCell object.
+	 * @param mouseX - X position
+	 * @param mouseY - Y position
+	 * @return - Boolean
+	 */
+	public boolean containsClick(int mouseX, int mouseY) {
+		Rectangle rect = new Rectangle(column*WIDTH,  row*HEIGHT, WIDTH, HEIGHT);
+		if (rect.contains(new Point(mouseX, mouseY))) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

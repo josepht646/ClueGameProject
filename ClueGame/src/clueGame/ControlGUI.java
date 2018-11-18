@@ -25,6 +25,38 @@ public class ControlGUI extends JPanel {
 	private JTextField roll, currentPlayer, guess, guessResult;
 	private Board board;
 	public JButton nextPlayer, accuse;
+	
+	/**
+	 * Set the roll text.
+	 * @param roll - Text to set
+	 */
+	public void setRoll(String roll) {
+		this.roll.setText(roll);
+	}
+	
+	/**
+	 * Sets the current player text.
+	 * @param currentPlayer - Text to set
+	 */
+	public void setCurrentPlayer(String currentPlayer) {
+		this.currentPlayer.setText(currentPlayer);
+	}
+	
+	/**
+	 * Sets the guess text.
+	 * @param guess - Text to set
+	 */
+	public void setGuess(String guess) {
+		this.guess.setText(guess);
+	}
+	
+	/**
+	 * Set the guess result text.
+	 * @param guessResult - Text to set
+	 */
+	public void setGuessResult(String guessResult) {
+		this.guessResult.setText(guessResult);
+	}
 
 	/**
 	 * Construct the GUI and add panels to setup the control layout.
@@ -57,6 +89,7 @@ public class ControlGUI extends JPanel {
 		return panel;
 		
 	}
+	
 	private JPanel createResultPanel() {
 		JLabel resultLabel = new JLabel("Response");
 		JPanel panel = new JPanel();
@@ -80,6 +113,7 @@ public class ControlGUI extends JPanel {
 		return panel;
 		
 	}
+	
 	private JPanel createDiePanel() {
 		JLabel dieLabel = new JLabel("Roll");
 		JPanel panel = new JPanel();
@@ -91,6 +125,7 @@ public class ControlGUI extends JPanel {
 		panel.setBorder(new TitledBorder (new EtchedBorder(), "Die"));
 		return panel;
 	}
+	
 	private JPanel createGuessPanel() {
 		JPanel panel = new JPanel();
 		
@@ -103,6 +138,7 @@ public class ControlGUI extends JPanel {
 		return panel;
 		
 	}
+	
 	/**
 	 * Tests the control gui.
 	 * @param args - Not used.

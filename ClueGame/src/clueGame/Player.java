@@ -38,6 +38,22 @@ public abstract class Player {
 	 */
 	public Player() {
 	}
+	
+	/**
+	 * Set the row.
+	 * @param row - Row position
+	 */
+	public void setRow(int row) {
+		this.row = row;
+	}
+	
+	/**
+	 * Set the column.
+	 * @param column - Column position
+	 */
+	public void setColumn(int column) {
+		this.column = column;
+	}
 
 	/**
 	 * Sets the cards the player has.
@@ -118,14 +134,21 @@ public abstract class Player {
 	 */
 	public abstract Card disproveSuggestion(Solution suggestion);
 	
+	/**
+	 * Abstract function.
+	 * @param targets - Targets to move to
+	 * @return - BoardCell object
+	 */
 	public abstract BoardCell pickLocation(Set<BoardCell> targets);
-
+	
+	/**
+	 * Draw the player to a graphics object.
+	 * @param g - Graphics object
+	 */
 	public void draw(Graphics g) {
 		g.setColor(color);
 		g.fillOval(column*BoardCell.WIDTH, row*BoardCell.HEIGHT, BoardCell.WIDTH, BoardCell.HEIGHT);
 		g.setColor(Color.BLACK);
 		g.drawOval(column*BoardCell.WIDTH, row*BoardCell.HEIGHT, BoardCell.WIDTH, BoardCell.HEIGHT);
-
-		
 	}
 }
