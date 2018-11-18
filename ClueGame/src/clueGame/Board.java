@@ -350,12 +350,6 @@ public class Board extends JPanel {
 		calcTargets(getCellAt(row,col), pathLength);
 	}
 	
-	/**
-	 * Recursive function to find all possible positions for player to move to (the targets list).
-	 * @param cell - Board Cell to calculate targets from
-	 * @param pathLength - The number of steps to take when calculating target list
-	 * @param startingRoom - The character of the room where the player starts
-	 */
 	private void findAllTargets(BoardCell cell, int pathLength, char startingRoom) {
 		for (BoardCell myCell : adjList.get(cell)) {
 			if (!visited.contains(myCell)) {    // Check if cell has not been visited yet.
@@ -517,6 +511,7 @@ public class Board extends JPanel {
 	}
 	
 	public void paintComponent(Graphics g) {
+		System.out.println("paint in board called");
 		for (int i = numRows-1; i >= 0; i--) {
 			for (int j = numColumns-1; j >= 0; j--) {
 				board[i][j].draw(g);
@@ -526,5 +521,10 @@ public class Board extends JPanel {
 			p.draw(g);
 		}
 	}
-
+	
+	public void nextPlayer() {
+		System.out.println("e");
+		calcTargets(getHumanPlayer().getRow(), getHumanPlayer().getColumn(), 5);
+		getHumanPlayer().pickLocation(getTargets());
+	}
 }

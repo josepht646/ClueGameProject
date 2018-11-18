@@ -15,6 +15,7 @@ public class BoardCell {
 	private char initial;
 	private DoorDirection doorDir;
 	private boolean isWalkway, isName;
+	private boolean isTarget;
 	public static final int WIDTH = 25;
 	public static final int HEIGHT = 25;
 	
@@ -29,6 +30,7 @@ public class BoardCell {
 		doorDir = DoorDirection.NONE;
 		isWalkway = false;
 		isName = false;
+		isTarget = false;
 	}
 	
 	/**
@@ -46,8 +48,13 @@ public class BoardCell {
 		this.doorDir = doorDir;
 		this.isWalkway = isWalkway;
 		this.isName = isName;
+		this.isTarget = false;
 	}
 	
+	public void setTarget(boolean isTarget) {
+		this.isTarget = isTarget;
+	}
+
 	/**
 	 * Set row.
 	 * @param row - Index of row
@@ -126,22 +133,26 @@ public class BoardCell {
 		int startY = row*HEIGHT;
 		if (isWalkway) {
 			g.setColor(Color.ORANGE);
-			g.fillRect(startX, startY, WIDTH, HEIGHT);
+		} else {
+			g.setColor(Color.LIGHT_GRAY);
+		}
+		if (isTarget) {
+			g.setColor(Color.CYAN);
+		}
+		g.fillRect(startX, startY, WIDTH, HEIGHT);
+		
+		if (isWalkway) {
 			g.setColor(Color.BLACK);
 			g.drawLine(startX, startY, startX + WIDTH - 1, startY);
 			g.drawLine(startX, startY, startX, startY+HEIGHT);
 			
 		} else if (!isDoorway()) {
-			g.setColor(Color.LIGHT_GRAY);
-			g.fillRect(startX, startY, WIDTH, HEIGHT);
 			if (isName) {
 				Board board = Board.getInstance();
 				g.setColor(Color.BLUE);
 				g.drawString(board.getLegend().get(initial), startX, startY+HEIGHT );
 			}
 		} else {
-			g.setColor(Color.LIGHT_GRAY);
-			g.fillRect(startX, startY, WIDTH, HEIGHT);
 			g.setColor(Color.BLUE);
 			switch(doorDir) {
 			case UP:

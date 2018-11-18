@@ -2,7 +2,10 @@ package clueGame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,10 +23,14 @@ import javax.swing.border.TitledBorder;
  */
 public class ControlGUI extends JPanel {
 	private JTextField roll, currentPlayer, guess, guessResult;
+	private Board board;
+	public JButton nextPlayer, accuse;
+
 	/**
 	 * Construct the GUI and add panels to setup the control layout.
 	 */
 	public ControlGUI() {
+		board = Board.getInstance();
 		setLayout(new GridLayout(2, 0));
 		JPanel panel = createTopPanel();
 		add(panel);
@@ -35,13 +42,13 @@ public class ControlGUI extends JPanel {
 		JPanel panel = new JPanel();    // Top panel has whose turn, next player, and make accusation.
 		panel.setLayout(new GridLayout(1,3));
 		panel.add(createWhoseTurnPanel());
-		JButton nextPlayer = new JButton("Next player");
-		JButton accuse = new JButton("Make an accusation");
+		nextPlayer = new JButton("Next player");
+		accuse = new JButton("Make an accusation");
 		panel.add(nextPlayer);
 		panel.add(accuse);
 		return panel;
-		
 	}
+	
 	private JPanel createBottomPanel() {
 		JPanel panel = new JPanel();    // Bottom panel has die, guess, and guess result.
 		panel.add(createDiePanel());

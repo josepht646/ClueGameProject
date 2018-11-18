@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,6 +30,7 @@ import javax.swing.border.TitledBorder;
 public class ClueGame extends JPanel {
 	private Board board;
 	private DetectiveNotesDialog dialog;
+	private ControlGUI gui;
 	/**
 	 * Sets up the board and the dialog.
 	 */
@@ -38,14 +41,34 @@ public class ClueGame extends JPanel {
 		board.initialize();
 		dialog = new DetectiveNotesDialog();
 		dialog.pack();
+		gui = new ControlGUI();
+		addMouseListener(new DotsListener());
+		gui.nextPlayer.addActionListener(new NextListener());
 	}
+	
+	public ControlGUI getGui() {
+		return gui;
+	}
+
 	/**
 	 * Draws the board.
 	 */
+	@Override
 	public void paintComponent(Graphics g) {
+		System.out.println("paint game called");
 		super.paintComponent(g);
 		board.paintComponent(g);
 	}
+	
+	private class NextListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("action");
+			board.nextPlayer();
+			repaint();
+		}
+	}
+	
 	/**
 	 * Creates the file menu.
 	 * @return - JMenu object.
@@ -53,6 +76,7 @@ public class ClueGame extends JPanel {
 	public JMenu createFileMenu() {
 		JMenu menu = new JMenu("File");
 		menu.add(createDetectiveNotesItem());
+		menu.add(createRepaintItem());
 		menu.add(createFileExitItem());
 		return menu;
 	}
@@ -76,13 +100,23 @@ public class ClueGame extends JPanel {
 		item.addActionListener(new MenuItemListener());
 		return item;
 	}
+	private JMenuItem createRepaintItem() {
+		JMenuItem item = new JMenuItem("Repaint");
+		class MenuItemListener implements ActionListener {
+			public void actionPerformed(ActionEvent e) {
+				repaint();
+			}
+		}
+		item.addActionListener(new MenuItemListener());
+		return item;
+	}
 	/**
 	 * Creates JPanel displaying the player's cards.
 	 * @return - JPanel component
 	 */
 	public JPanel createMyCardsDisplay() {
 		JPanel panel = new JPanel();
-		
+	
 		panel.setLayout(new GridLayout(3,1));
 		
 		JPanel people = new JPanel();
@@ -129,6 +163,20 @@ public class ClueGame extends JPanel {
 		
 		return panel;
 	}
+	private class DotsListener implements MouseListener {
+		//  Empty definitions for unused event methods.
+		public void mousePressed (MouseEvent event) {}
+		public void mouseReleased (MouseEvent event) {}
+		public void mouseEntered (MouseEvent event) {}
+		public void mouseExited (MouseEvent event) {}
+		public void mouseClicked (MouseEvent event) {
+			// update the list of points
+			 System.out.println(event.getX() + " " + event.getY());
+			repaint(); // MUST CALL REPAINT
+			
+		}		
+	}
+	
 	/**
 	 * Main for the game.
 	 * @param args - Not used.
@@ -141,12 +189,9 @@ public class ClueGame extends JPanel {
 		gameBoard.setPreferredSize(new Dimension(gameBoard.board.getNumColumns()*BoardCell.WIDTH, gameBoard.board.getNumRows()*BoardCell.HEIGHT));
 		JPanel myCardsDisplay = gameBoard.createMyCardsDisplay();
 		
-		ControlGUI gui = new ControlGUI();
-		
 		frame.add(myCardsDisplay, BorderLayout.EAST);
-		frame.add(gui, BorderLayout.SOUTH);
+		frame.add(gameBoard.getGui(), BorderLayout.SOUTH);
 		frame.add(gameBoard, BorderLayout.WEST);
-		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(gameBoard.createFileMenu());
 		frame.setJMenuBar(menuBar);

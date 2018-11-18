@@ -59,6 +59,7 @@ public class ComputerPlayer extends Player {
 	 * @param targets - Set of BoardCell objects the player can move to.
 	 * @return - BoardCell to move to.
 	 */
+	@Override
 	public BoardCell pickLocation(Set<BoardCell> targets) {
 		ArrayList<BoardCell> roomsToMoveTo = new ArrayList<BoardCell>();
 		for (BoardCell cell : targets) {

@@ -3,6 +3,7 @@ package clueGame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Set;
 /**
  * Represents players in the game Clue.
  * @author Joseph Thurston
@@ -116,6 +117,8 @@ public abstract class Player {
 	 * @return - Card that disproves suggestion or null.
 	 */
 	public abstract Card disproveSuggestion(Solution suggestion);
+	
+	public abstract BoardCell pickLocation(Set<BoardCell> targets);
 
 	public void draw(Graphics g) {
 		g.setColor(color);

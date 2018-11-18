@@ -3,6 +3,7 @@ package clueGame;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
 /**
  * Human player for the game.
@@ -42,5 +43,13 @@ public class HumanPlayer extends Player {
 		}
 		Collections.shuffle(matchingCards);
 		return matchingCards.get(0);
+	}
+	
+	@Override
+	public BoardCell pickLocation(Set<BoardCell> targets) {
+		for (BoardCell cell : targets) {
+			cell.setTarget(true);
+		}
+		return null;
 	}
 }
