@@ -539,9 +539,23 @@ public class Board extends JPanel {
 	public void currentPlayerTurn(int currentPlayer, int roll) {
 		calcTargets(players.get(currentPlayer).getRow(), players.get(currentPlayer).getColumn(), roll);
 		BoardCell cellLocation = players.get(currentPlayer).pickLocation(getTargets());
-		if (players.get(currentPlayer) instanceof ComputerPlayer) {
+		if (players.get(currentPlayer) instanceof ComputerPlayer && cellLocation != null) {
 			players.get(currentPlayer).setRow(cellLocation.getRow());
 			players.get(currentPlayer).setColumn(cellLocation.getColumn());
+			if (cellLocation.isDoorway()) {
+				Card c = handleSuggestion(((ComputerPlayer) players.get(currentPlayer)).createSuggestion(), players.get(currentPlayer));
+				if (c == null) {
+					Player.suggestionDisproven = false;
+				} else {
+					
+				}
+			}
+		} else if (players.get(currentPlayer) instanceof ComputerPlayer) {
+			if (checkAccusation(((ComputerPlayer) players.get(currentPlayer)).makeAccusation())) {
+				//end game
+			} else {
+				players.remove(currentPlayer);
+			}
 		}
 		
 	}

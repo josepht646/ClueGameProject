@@ -34,6 +34,7 @@ public class ClueGame extends JPanel {
 	private int currentPlayer, roll;
 	private boolean humanPlayerTurn = true;
 	private Random rng = new Random();
+	private GuessDialog guessDialog;
 	
 	/**
 	 * Sets up the board and the dialog.
@@ -54,7 +55,7 @@ public class ClueGame extends JPanel {
 		roll = rng.nextInt(6) + 1;
 		dialog = new DetectiveNotesDialog();
 		dialog.pack();
-		gui = new ControlGUI();
+		gui = ControlGUI.getInstance();
 		gui.setRoll(String.valueOf(roll));
 		gui.setCurrentPlayer(board.getPlayers().get(currentPlayer).getPlayerName());
 		addMouseListener(new CellListener());
@@ -207,6 +208,9 @@ public class ClueGame extends JPanel {
 					currentPlayer = (currentPlayer + 1) % board.getPlayers().size();
 					roll = rng.nextInt(6) + 1;
 					repaint();
+					if (clicked.isDoorway()) {
+						
+					}
 				} else {
 					JFrame splashScreen = new JFrame();
 					JOptionPane.showMessageDialog(splashScreen, "You cannot go there", "Error" , JOptionPane.INFORMATION_MESSAGE);

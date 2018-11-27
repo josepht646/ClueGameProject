@@ -12,6 +12,8 @@ import java.util.Set;
  */
 public class ComputerPlayer extends Player {
 	private char lastRoom = '\0';
+	
+
 	/**
 	 * Construct the computer player.
 	 * @param playerName - name
@@ -61,6 +63,11 @@ public class ComputerPlayer extends Player {
 	 */
 	@Override
 	public BoardCell pickLocation(Set<BoardCell> targets) {
+		
+		if (!suggestionDisproven && checkCards(lastSuggestion)) {
+			//makeAccusation();
+			return null;
+		}
 		ArrayList<BoardCell> roomsToMoveTo = new ArrayList<BoardCell>();
 		for (BoardCell cell : targets) {
 			if (cell.isDoorway() && cell.getInitial() != lastRoom) {
@@ -87,10 +94,18 @@ public class ComputerPlayer extends Player {
 	/**
 	 * In development.
 	 */
-	public Card[] makeAccusation() {
-		return null;
+	public Solution makeAccusation() {
+		return lastSuggestion;
 	}
 	
+	private boolean checkCards(Solution s) {
+		for (Card c: getMyCards()) {
+			if (c.getCardName() == s.person || c.getCardName() == s.weapon || c.getCardName() == s.room) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * Creates a suggestion based on the players location and the cards it has encountered.
@@ -112,6 +127,7 @@ public class ComputerPlayer extends Player {
 				}
 			}
 		}
+		lastSuggestion = suggestion;
 		return suggestion;
 	}
 	

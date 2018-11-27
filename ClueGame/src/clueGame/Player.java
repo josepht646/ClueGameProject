@@ -16,7 +16,11 @@ public abstract class Player {
 	private int column;
 	private Color color;
 	private ArrayList<Card> myCards, seenCards;
-	
+	protected static Solution lastSuggestion = null;
+	protected static boolean suggestionDisproven = true;
+
+
+
 	/**
 	 * Construct the player object
 	 * @param playerName - String representing player's name
@@ -125,6 +129,22 @@ public abstract class Player {
 	 */
 	public void addCard(Card c) {
 		myCards.add(c);
+	}
+	
+	public Solution getAccusation() {
+		return lastSuggestion;
+	}
+
+	public void setAccusation(Solution accusation) {
+		this.lastSuggestion = accusation;
+	}
+
+	public boolean isSuggestionDisproven() {
+		return suggestionDisproven;
+	}
+
+	public void setSuggestionDisproven(boolean suggestionDisproven) {
+		this.suggestionDisproven = suggestionDisproven;
 	}
 
 	/**

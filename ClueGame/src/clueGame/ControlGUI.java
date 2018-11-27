@@ -22,9 +22,14 @@ import javax.swing.border.TitledBorder;
  *
  */
 public class ControlGUI extends JPanel {
+	private static ControlGUI theInstance = new ControlGUI();
 	private JTextField roll, currentPlayer, guess, guessResult;
 	private Board board;
 	public JButton nextPlayer, accuse;
+	
+	public static ControlGUI getInstance() {
+		return theInstance;
+	}
 	
 	/**
 	 * Set the roll text.
