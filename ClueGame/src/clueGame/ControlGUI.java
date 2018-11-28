@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -98,7 +99,6 @@ public class ControlGUI extends JPanel {
 	private JPanel createResultPanel() {
 		JLabel resultLabel = new JLabel("Response");
 		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(1,2));
 		guessResult = new JTextField(15);
 		guessResult.setEditable(false);
 		panel.add(resultLabel);
@@ -135,7 +135,7 @@ public class ControlGUI extends JPanel {
 		JPanel panel = new JPanel();
 		
 		JLabel guessLabel = new JLabel("Guess");
-		guess = new JTextField(25);
+		guess = new JTextField(40);
 		guess.setEditable(false);
 		panel.add(guessLabel);
 		panel.add(guess);

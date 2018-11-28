@@ -143,10 +143,6 @@ public abstract class Player {
 		return suggestionDisproven;
 	}
 
-	public void setSuggestionDisproven(boolean suggestionDisproven) {
-		this.suggestionDisproven = suggestionDisproven;
-	}
-
 	/**
 	 * Disproves suggestion if possible.
 	 * @param suggestion - Solution object representing suggestion to disprove

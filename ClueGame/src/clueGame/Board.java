@@ -14,6 +14,8 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import clueGame.BoardCell;
@@ -380,14 +382,25 @@ public class Board extends JPanel {
 	 * @return - Card that disproves suggestion, or null.
 	 */
 	public Card handleSuggestion(Solution suggestion, Player accuser) {
+		ControlGUI.getInstance().setGuess(suggestion.person + " in the " + suggestion.room + " with the " + suggestion.weapon);
+		for (Player p : players) {
+			if (p.getPlayerName().equals(suggestion.person)) {
+				p.setRow(accuser.getRow());
+				p.setColumn(accuser.getColumn());
+			}
+		}
 		for (Player p : players) {
 			if (p != accuser) {
 				Card c = p.disproveSuggestion(suggestion);
 				if (c != null) {
+					ControlGUI.getInstance().setGuessResult(c.getCardName());
+					Player.suggestionDisproven = true;
 					return c;
 				}
 			}
 		}
+		ControlGUI.getInstance().setGuessResult("None");
+		Player.suggestionDisproven = false;
 		return null;
 	}
 	
@@ -397,7 +410,14 @@ public class Board extends JPanel {
 	 * @return - True or False
 	 */
 	public boolean checkAccusation(Solution accusation) {
-		return (accusation.person == theAnswer.person) && (accusation.room == theAnswer.room) && (accusation.weapon == theAnswer.weapon);
+		if ((accusation.person == theAnswer.person) && (accusation.room == theAnswer.room) && (accusation.weapon == theAnswer.weapon)) {
+			return true;
+		} else {
+			players.remove(ClueGame.getInstance().getCurrentPlayer());
+			ClueGame.getInstance().setCurrentPlayer(ClueGame.getInstance().getCurrentPlayer()-1);
+			Player.suggestionDisproven = true;
+			return false;
+		}
 	}
 	
 	/**
@@ -469,6 +489,7 @@ public class Board extends JPanel {
 			}
 		}
 		setTheAnswer(new Solution(solutionCards[0].getCardName(), solutionCards[1].getCardName(), solutionCards[2].getCardName()));
+		Collections.shuffle(deck);
 		
 		int i = 0;
 		for (Player p : players) {
@@ -537,24 +558,21 @@ public class Board extends JPanel {
 	 * Sets up target list for current players turn and moves players controlled by computer.
 	 */
 	public void currentPlayerTurn(int currentPlayer, int roll) {
+		ControlGUI.getInstance().setGuess("");
+		ControlGUI.getInstance().setGuessResult("");
 		calcTargets(players.get(currentPlayer).getRow(), players.get(currentPlayer).getColumn(), roll);
 		BoardCell cellLocation = players.get(currentPlayer).pickLocation(getTargets());
 		if (players.get(currentPlayer) instanceof ComputerPlayer && cellLocation != null) {
 			players.get(currentPlayer).setRow(cellLocation.getRow());
 			players.get(currentPlayer).setColumn(cellLocation.getColumn());
 			if (cellLocation.isDoorway()) {
-				Card c = handleSuggestion(((ComputerPlayer) players.get(currentPlayer)).createSuggestion(), players.get(currentPlayer));
-				if (c == null) {
-					Player.suggestionDisproven = false;
-				} else {
-					
-				}
+				handleSuggestion(((ComputerPlayer) players.get(currentPlayer)).createSuggestion(), players.get(currentPlayer));
 			}
 		} else if (players.get(currentPlayer) instanceof ComputerPlayer) {
 			if (checkAccusation(((ComputerPlayer) players.get(currentPlayer)).makeAccusation())) {
-				//end game
-			} else {
-				players.remove(currentPlayer);
+				JFrame winMessage = new JFrame();
+				JOptionPane.showMessageDialog(winMessage, players.get(currentPlayer).getPlayerName() + " guessed correctly and won the game." , "Another Player Won", JOptionPane.INFORMATION_MESSAGE);
+				System.exit(0);
 			}
 		}
 		

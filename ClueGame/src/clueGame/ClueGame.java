@@ -35,7 +35,13 @@ public class ClueGame extends JPanel {
 	private boolean humanPlayerTurn = true;
 	private Random rng = new Random();
 	private GuessDialog guessDialog;
+	private AccuseDialog accuseDialog;
+	private static ClueGame theInstance = new ClueGame();
 	
+	public static ClueGame getInstance() {
+		return theInstance;
+	}
+
 	/**
 	 * Sets up the board and the dialog.
 	 * Sets initial turn data.
@@ -54,12 +60,17 @@ public class ClueGame extends JPanel {
 		}
 		roll = rng.nextInt(6) + 1;
 		dialog = new DetectiveNotesDialog();
+		guessDialog = new GuessDialog();
+		accuseDialog = new AccuseDialog();
+		accuseDialog.pack();
 		dialog.pack();
+		guessDialog.pack();
 		gui = ControlGUI.getInstance();
 		gui.setRoll(String.valueOf(roll));
 		gui.setCurrentPlayer(board.getPlayers().get(currentPlayer).getPlayerName());
 		addMouseListener(new CellListener());
 		gui.nextPlayer.addActionListener(new NextListener());
+		gui.accuse.addActionListener(new AccuseListener());
 	}
 	
 	/**
@@ -85,6 +96,7 @@ public class ClueGame extends JPanel {
 			gui.setRoll(String.valueOf(roll));
 			gui.setCurrentPlayer(board.getPlayers().get(currentPlayer).getPlayerName());
 			if (board.getPlayers().get(currentPlayer) instanceof HumanPlayer) {
+				humanPlayerTurn = true;
 				board.currentPlayerTurn(currentPlayer, roll);
 				repaint();
 			} else {
@@ -93,6 +105,13 @@ public class ClueGame extends JPanel {
 				currentPlayer = (currentPlayer + 1) % board.getPlayers().size();
 				roll = rng.nextInt(6) + 1;
 			}
+		}
+	}
+	
+	private class AccuseListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			accuseDialog.setVisible(true);
 		}
 	}
 	
@@ -197,6 +216,7 @@ public class ClueGame extends JPanel {
 	
 	private class CellListener implements MouseListener {
 		public void mousePressed (MouseEvent event) {
+			
 			if (humanPlayerTurn) {
 				BoardCell clicked = board.getTargetClicked(event.getX(), event.getY());
 				if (clicked != null) {
@@ -205,16 +225,20 @@ public class ClueGame extends JPanel {
 					for (BoardCell cell : board.getTargets()) {
 						cell.setTarget(false);
 					}
-					currentPlayer = (currentPlayer + 1) % board.getPlayers().size();
 					roll = rng.nextInt(6) + 1;
 					repaint();
 					if (clicked.isDoorway()) {
-						
+						guessDialog.setRoomName(board.getLegend().get(board.getCellAt(clicked.getRow(), clicked.getColumn()).getInitial()));
+						guessDialog.setVisible(true);
 					}
+					currentPlayer = (currentPlayer + 1) % board.getPlayers().size();
+					humanPlayerTurn = false;
+					repaint();
 				} else {
 					JFrame splashScreen = new JFrame();
 					JOptionPane.showMessageDialog(splashScreen, "You cannot go there", "Error" , JOptionPane.INFORMATION_MESSAGE);
 				}
+				
 			}
 		}
 		public void mouseReleased (MouseEvent event) {}
@@ -223,6 +247,10 @@ public class ClueGame extends JPanel {
 		public void mouseClicked (MouseEvent event) {}		
 	}
 	
+	public void setCurrentPlayer(int currentPlayer) {
+		this.currentPlayer = currentPlayer;
+	}
+
 	/**
 	 * Gets index of current player.
 	 * @return - int
@@ -247,7 +275,7 @@ public class ClueGame extends JPanel {
 		JFrame frame = new JFrame("ClueGame");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		ClueGame gameBoard = new ClueGame();
+		ClueGame gameBoard = ClueGame.getInstance();
 		gameBoard.setPreferredSize(new Dimension(gameBoard.board.getNumColumns()*BoardCell.WIDTH, gameBoard.board.getNumRows()*BoardCell.HEIGHT));
 		gameBoard.board.currentPlayerTurn(gameBoard.getCurrentPlayer(), gameBoard.getCurrentRoll());
 		JPanel myCardsDisplay = gameBoard.createMyCardsDisplay();

@@ -64,7 +64,7 @@ public class ComputerPlayer extends Player {
 	@Override
 	public BoardCell pickLocation(Set<BoardCell> targets) {
 		
-		if (!suggestionDisproven && checkCards(lastSuggestion)) {
+		if (!suggestionDisproven && checkCards(lastSuggestion) && getMyCards().size()+getSeenCards().size() >= 0.75*Board.getInstance().getCards().size()) {
 			//makeAccusation();
 			return null;
 		}
