@@ -23,8 +23,7 @@ public class HumanPlayer extends Player {
 	}
 	
 	/**
-	 * In development
-	 * For now this method emulates the implementation used by the Computer Player.
+	 * Check if player has any cards that can disprove the suggestion and return one of them.
 	 */
 	@Override
 	public Card disproveSuggestion(Solution suggestion) {

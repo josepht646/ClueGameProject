@@ -4,8 +4,6 @@ import java.awt.Dialog;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,8 +12,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
+/**
+ * AccuseDialog is a dialog window for making an accusation.
+ * @author Joseph Thurston
+ * @author Thomas Depke
+ *
+ */
 public class AccuseDialog  extends JDialog {
 	private Board board;
 	private boolean submitted = false;
@@ -23,6 +26,9 @@ public class AccuseDialog  extends JDialog {
 	private JComboBox<String> roomsList, weaponsList, peopleList;
 	private Solution response = new Solution("","","");
 	
+	/**
+	 * Construct the object.
+	 */
 	public AccuseDialog() {
 		board = Board.getInstance();
 		setLayout(new GridLayout(4,2));
@@ -43,7 +49,6 @@ public class AccuseDialog  extends JDialog {
 		add(submit);
 		add(cancel);
 		setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-		
 	}
 	
 	private class SubmitListener implements ActionListener {
@@ -78,6 +83,10 @@ public class AccuseDialog  extends JDialog {
 		}
 	}
 	
+	/**
+	 * Get the accusation response.
+	 * @return - Solution object
+	 */
 	public Solution getResponse() {
 		return response;
 	}
@@ -149,7 +158,11 @@ public class AccuseDialog  extends JDialog {
 		
 		return panel;
 	}
-
+	
+	/**
+	 * Check if accusation is submitted.
+	 * @return - boolean value
+	 */
 	public boolean isSubmitted() {
 		return submitted;
 	}

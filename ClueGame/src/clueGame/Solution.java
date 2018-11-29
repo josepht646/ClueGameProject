@@ -12,9 +12,9 @@ public class Solution {
 	
 	/**
 	 * Construct the solution with person, room, and weapon names.
-	 * @param person
-	 * @param room
-	 * @param weapon
+	 * @param person - Name of person
+	 * @param room - Name of room
+	 * @param weapon - Name of weapon
 	 */
 	public Solution(String person, String room, String weapon) {
 		this.person = person;
@@ -23,6 +23,9 @@ public class Solution {
 		
 	}
 	
+	/**
+	 * Get object as a string.
+	 */
 	@Override
 	public String toString() {
 		return person + " in the " + room + " with the " + weapon;

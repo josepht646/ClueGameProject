@@ -40,6 +40,7 @@ public class Board extends JPanel {
 	private ArrayList<Card> deck;
 	private Solution theAnswer;
 	public Random rng = new Random();
+	
 	/**
 	 * Constructor is private to ensure only one instance can be created.
 	 */
@@ -54,12 +55,13 @@ public class Board extends JPanel {
 		boardConfigFile = fileCSV;
 		roomConfigFile = legendFile;
 	}
+	
 	/**
 	 * Sets file names.
-	 * @param fileCSV - name of the configuration file for the board
-	 * @param legendFile - name of the configuration file for the legend
-	 * @param weaponFile 
-	 * @param peopleFile 
+	 * @param fileCSV - Name of the configuration file for the board
+	 * @param legendFile - Name of the configuration file for the legend
+	 * @param weaponFile - Name of config file for weapons
+	 * @param peopleFile - Name of config file for people
 	 */
 	public void setConfigFiles(String fileCSV, String legendFile, String peopleFile, String weaponFile) {
 		boardConfigFile = fileCSV;
@@ -67,6 +69,7 @@ public class Board extends JPanel {
 		peopleConfigFile = peopleFile;
 		weaponConfigFile = weaponFile;
 	}
+	
 	/**
 	 * Get the singleton board.
 	 * @return - Board object representing the single instance of the Board class.
@@ -156,6 +159,7 @@ public class Board extends JPanel {
 		}
 		return null;
 	}
+	
 	/**
 	 * Loads both configuration files.
 	 */
@@ -173,8 +177,8 @@ public class Board extends JPanel {
 	
 	/**
 	 * Loads the legend file.
-	 * @throws BadConfigFormatException
-	 * @throws FileNotFoundException
+	 * @throws BadConfigFormatException - Config file in wrong format
+	 * @throws FileNotFoundException - Cannot find the file
 	 */
 	public void loadRoomConfig() throws BadConfigFormatException, FileNotFoundException {
 		legend = new HashMap<Character, String>();
@@ -201,8 +205,8 @@ public class Board extends JPanel {
 	
 	/**
 	 * Loads the board file.
-	 * @throws BadConfigFormatException
-	 * @throws FileNotFoundException
+	 * @throws BadConfigFormatException - Config file in wrong format
+	 * @throws FileNotFoundException - Cannot find the file
 	 */
 	public void loadBoardConfig() throws BadConfigFormatException, FileNotFoundException {
 		visited = new HashSet<BoardCell>();
@@ -371,14 +375,9 @@ public class Board extends JPanel {
 	}
 	
 	/**
-	 * In development.
-	 */
-	public void selectAnswer() {
-		
-	}
-	
-	/**
 	 * Handles the suggestion. Compares it to the players ability to disprove it.
+	 * @param suggestion - Solution object
+	 * @param accuser - Player object
 	 * @return - Card that disproves suggestion, or null.
 	 */
 	public Card handleSuggestion(Solution suggestion, Player accuser) {
@@ -409,7 +408,7 @@ public class Board extends JPanel {
 				}
 			}
 		}
-		ControlGUI.getInstance().setGuessResult("None");
+		ControlGUI.getInstance().setGuessResult("No new clue");
 		Player.suggestionDisproven = false;
 		return null;
 	}
@@ -425,8 +424,8 @@ public class Board extends JPanel {
 	
 	/**
 	 * Loads the people and weapon configuration files.
-	 * @throws BadConfigFormatException
-	 * @throws FileNotFoundException
+	 * @throws BadConfigFormatException - Config file in wrong format
+	 * @throws FileNotFoundException - Cannot find file
 	 */
 	public void loadConfigFiles() throws BadConfigFormatException, FileNotFoundException {
 		players = new ArrayList<Player>();
@@ -511,21 +510,20 @@ public class Board extends JPanel {
 
 	/**
 	 * Converts string to color
-	 * @param strColor -String representing color
+	 * @param strColor - String representing color
 	 * @return - color object
 	 */
 	public Color convertColor(String strColor) {
-		 Color color;
-		 try {
-		 // We can use reflection to convert the string to a color
-		 Field field = Class.forName("java.awt.Color").getField(strColor.trim());
-		 color = (Color)field.get(null);
-		 } catch (Exception e) {
-		 color = null; // Not defined
-		 }
-		 return color;
+		Color color;
+		try {
+			Field field = Class.forName("java.awt.Color").getField(strColor.trim());
+			color = (Color)field.get(null);
+		} catch (Exception e) {
+			color = null; // Not defined
 		}
-
+		return color;
+	}
+	
 	/**
 	 * Sets the answer to the game.
 	 * @param theAnswer - Solution Object
@@ -533,7 +531,7 @@ public class Board extends JPanel {
 	public void setTheAnswer(Solution theAnswer) {
 		this.theAnswer = theAnswer;
 	}
-
+	
 	/**
 	 * Gets the answer
 	 * @return - Solution Object
@@ -559,6 +557,8 @@ public class Board extends JPanel {
 	
 	/**
 	 * Sets up target list for current players turn and moves players controlled by computer.
+	 * @param currentPlayer - Index of current player
+	 * @param roll - Value of the die roll
 	 */
 	public void currentPlayerTurn(int currentPlayer, int roll) {
 		ControlGUI.getInstance().setGuess("");
@@ -570,18 +570,18 @@ public class Board extends JPanel {
 			if (accusation != null) {
 				if (checkAccusation(accusation)) {
 					JFrame winMessage = new JFrame();
-					JOptionPane.showMessageDialog(winMessage, players.get(currentPlayer).getPlayerName() + " accused the correct person and won the game!" , "Another Player Won", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(winMessage, players.get(currentPlayer).getPlayerName() + " correctly accused " + accusation + " and won the game!" , players.get(currentPlayer).getPlayerName() + " Won", JOptionPane.INFORMATION_MESSAGE);
 					System.exit(0);
 				} else {
 					JFrame loseMessage = new JFrame();
-					JOptionPane.showMessageDialog(loseMessage, players.get(currentPlayer).getPlayerName() + " accused the wrong person and lost :(" , "Rip", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(loseMessage, players.get(currentPlayer).getPlayerName() + " wrongly accused " + accusation + " and lost the game." , players.get(currentPlayer).getPlayerName() + " Lost", JOptionPane.INFORMATION_MESSAGE);
 					players.remove(ClueGame.getInstance().getCurrentPlayer());
 					ClueGame.getInstance().setCurrentPlayer(ClueGame.getInstance().getCurrentPlayer() - 1);
 					cellLocation = null;
 					Player.suggestionDisproven = true;
 					if (players.size() == 0) {
 						JFrame gameMessage = new JFrame();
-						JOptionPane.showMessageDialog(gameMessage, "The game is over, the murderer was " + theAnswer.toString(), "Game Over", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(gameMessage, "The game is over, the murderer was " + theAnswer, "Game Over", JOptionPane.INFORMATION_MESSAGE);
 						System.exit(0);
 					}
 				}

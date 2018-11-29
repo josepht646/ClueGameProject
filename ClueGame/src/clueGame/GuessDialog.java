@@ -15,6 +15,12 @@ import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+/**
+ * GuessDialog is a dialog window for making a suggestion.
+ * @author Joseph Thurston
+ * @author Thomas Depke
+ *
+ */
 public class GuessDialog extends JDialog {
 	private Board board;
 	private boolean submitted = false;
@@ -23,8 +29,9 @@ public class GuessDialog extends JDialog {
 	private JComboBox<String> weaponsList, peopleList;
 	private Solution response = new Solution("","","");
 	
-	
-
+	/**
+	 * Construct the object.
+	 */
 	public GuessDialog() {
 		board = Board.getInstance();
 		setLayout(new GridLayout(4,2));
@@ -47,10 +54,12 @@ public class GuessDialog extends JDialog {
 		add(submit);
 		add(cancel);
 		setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-		
 	}
 	
 	private class SubmitListener implements ActionListener {
+		/**
+		 * Action for button clicked.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == submit) {
@@ -67,11 +76,19 @@ public class GuessDialog extends JDialog {
 		}
 	}
 	
+	/**
+	 * Set the name of the room.
+	 * @param roomName - String object
+	 */
 	public void setRoomName(String roomName) {
 		response.room = roomName;
 		currentRoomText.setText(roomName);
 	}
 	
+	/**
+	 * Get the suggestion response.
+	 * @return - Solution object
+	 */
 	public Solution getResponse() {
 		return response;
 	}
@@ -98,6 +115,7 @@ public class GuessDialog extends JDialog {
 		
 		return panel;
 	}
+	
 	private JPanel createPersonGuessPanel() {
 		int numPeople = 0;
 		for(Card c: board.getCards() ) {
@@ -120,7 +138,11 @@ public class GuessDialog extends JDialog {
 		
 		return panel;
 	}
-
+	
+	/**
+	 * Check if suggestion is submitted.
+	 * @return - Boolean value
+	 */
 	public boolean isSubmitted() {
 		return submitted;
 	}

@@ -16,6 +16,7 @@ import javax.swing.border.TitledBorder;
 public class DetectiveNotesDialog extends JDialog {
 	private Board board;
 	private int numWeapons, numRooms, numPeople;
+	
 	/**
 	 * Construct the dialog and add each of the six panels.
 	 */
@@ -126,5 +127,4 @@ public class DetectiveNotesDialog extends JDialog {
 		panel.setBorder(new TitledBorder (new EtchedBorder(), "People"));
 		return panel;
 	}
-
 }

@@ -13,7 +13,6 @@ import java.util.Set;
 public class ComputerPlayer extends Player {
 	private char lastRoom = '\0';
 	
-
 	/**
 	 * Construct the computer player.
 	 * @param playerName - name
@@ -87,7 +86,8 @@ public class ComputerPlayer extends Player {
 	}
 	
 	/**
-	 * In development.
+	 * Makes an accusation with the last suggestion if it was not disproven and no duplicate cards are found.
+	 * @return - Accusation if valid or null
 	 */
 	public Solution makeAccusation() {
 		if (!suggestionDisproven && checkCards(lastSuggestion)) {

@@ -1,4 +1,5 @@
 package clueGame;
+
 /**
  * Class representing the Cards in Clue.
  * @author Joseph Thurston
@@ -10,6 +11,8 @@ public class Card {
 	
 	/**
 	 * Construct the card with the name and type.
+	 * @param cardName - Name of the card
+	 * @param typeOfCard - Type of the card
 	 */
 	public Card(String cardName, CardType typeOfCard) {
 		this.cardName = cardName;

@@ -38,6 +38,10 @@ public class ClueGame extends JPanel {
 	private AccuseDialog accuseDialog;
 	private static ClueGame theInstance = new ClueGame();
 	
+	/**
+	 * Get the singleton.
+	 * @return - ClueGame object
+	 */
 	public static ClueGame getInstance() {
 		return theInstance;
 	}
@@ -73,6 +77,10 @@ public class ClueGame extends JPanel {
 		gui.accuse.addActionListener(new AccuseListener());
 	}
 	
+	/**
+	 * Set the human player turn to true or false.
+	 * @param humanPlayerTurn - Boolean value
+	 */
 	public void setHumanPlayerTurn(boolean humanPlayerTurn) {
 		this.humanPlayerTurn = humanPlayerTurn;
 	}
@@ -113,11 +121,17 @@ public class ClueGame extends JPanel {
 	}
 	
 	private class AccuseListener implements ActionListener {
+		/**
+		 * Action for button press.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (humanPlayerTurn && !accuseDialog.isSubmitted()) {
 				accuseDialog.setVisible(true);
 				repaint();
+			} else {
+				JFrame infoScreen = new JFrame();
+				JOptionPane.showMessageDialog(infoScreen, "You must wait for your next turn to make an accusation.", "Error" , JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
 	}
@@ -129,7 +143,6 @@ public class ClueGame extends JPanel {
 	public JMenu createFileMenu() {
 		JMenu menu = new JMenu("File");
 		menu.add(createDetectiveNotesItem());
-		menu.add(createRepaintItem());
 		menu.add(createFileExitItem());
 		return menu;
 	}
@@ -150,17 +163,6 @@ public class ClueGame extends JPanel {
 		class MenuItemListener implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				dialog.setVisible(true);
-			}
-		}
-		item.addActionListener(new MenuItemListener());
-		return item;
-	}
-	
-	private JMenuItem createRepaintItem() {
-		JMenuItem item = new JMenuItem("Repaint");
-		class MenuItemListener implements ActionListener {
-			public void actionPerformed(ActionEvent e) {
-				repaint();
 			}
 		}
 		item.addActionListener(new MenuItemListener());
@@ -222,8 +224,10 @@ public class ClueGame extends JPanel {
 	}
 	
 	private class CellListener implements MouseListener {
+		/**
+		 * Action for cell clicked.
+		 */
 		public void mousePressed (MouseEvent event) {
-			
 			if (humanPlayerTurn) {
 				BoardCell clicked = board.getTargetClicked(event.getX(), event.getY());
 				if (clicked != null) {
@@ -254,6 +258,10 @@ public class ClueGame extends JPanel {
 		public void mouseClicked (MouseEvent event) {}		
 	}
 	
+	/**
+	 * Set the index of the current player.
+	 * @param currentPlayer - Integer object
+	 */
 	public void setCurrentPlayer(int currentPlayer) {
 		this.currentPlayer = currentPlayer;
 	}
@@ -300,7 +308,4 @@ public class ClueGame extends JPanel {
 		JFrame splashScreen = new JFrame();
 		JOptionPane.showMessageDialog(splashScreen, "You are " + gameBoard.board.getHumanPlayer().getPlayerName() + ", press okay to begin." , "Welcome to Clue", JOptionPane.INFORMATION_MESSAGE);
 	}
-
-	
-
 }

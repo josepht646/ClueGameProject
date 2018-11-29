@@ -128,14 +128,10 @@ public abstract class Player {
 		myCards.add(c);
 	}
 	
-	public Solution getAccusation() {
-		return lastSuggestion;
-	}
-
-	public void setAccusation(Solution accusation) {
-		this.lastSuggestion = accusation;
-	}
-
+	/**
+	 * Check if suggestion was disproven.
+	 * @return - Boolean value
+	 */
 	public boolean isSuggestionDisproven() {
 		return suggestionDisproven;
 	}

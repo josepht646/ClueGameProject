@@ -42,6 +42,7 @@ public class BoardCell {
 	 * @param initial - Character assigned to cell
 	 * @param doorDir - Direction of door
 	 * @param isWalkway - If cell is a walkway or not
+	 * @param isName - If cell marks a room name location
 	 */
 	public BoardCell(int row, int column, char initial, DoorDirection doorDir, boolean isWalkway, boolean isName) {
 		this.row = row;
@@ -53,10 +54,14 @@ public class BoardCell {
 		this.isTarget = false;
 	}
 	
+	/**
+	 * Set if cell is target or not.
+	 * @param isTarget - Boolean value
+	 */
 	public void setTarget(boolean isTarget) {
 		this.isTarget = isTarget;
 	}
-
+	
 	/**
 	 * Set row.
 	 * @param row - Index of row

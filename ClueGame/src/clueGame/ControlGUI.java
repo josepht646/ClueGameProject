@@ -28,6 +28,10 @@ public class ControlGUI extends JPanel {
 	private Board board;
 	public JButton nextPlayer, accuse;
 	
+	/**
+	 * Get the singleton.
+	 * @return - ControlGUI object
+	 */
 	public static ControlGUI getInstance() {
 		return theInstance;
 	}
@@ -133,7 +137,6 @@ public class ControlGUI extends JPanel {
 	
 	private JPanel createGuessPanel() {
 		JPanel panel = new JPanel();
-		
 		JLabel guessLabel = new JLabel("Guess");
 		guess = new JTextField(40);
 		guess.setEditable(false);
@@ -155,9 +158,6 @@ public class ControlGUI extends JPanel {
 		frame.setSize(1000, 200);
 		ControlGUI gui = new ControlGUI();
 		frame.add(gui, BorderLayout.CENTER);
-		// Now let's view it
 		frame.setVisible(true);
-
 	}
-
 }
