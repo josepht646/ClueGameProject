@@ -19,8 +19,6 @@ public abstract class Player {
 	protected static Solution lastSuggestion = null;
 	protected static boolean suggestionDisproven = true;
 
-
-
 	/**
 	 * Construct the player object
 	 * @param playerName - String representing player's name
@@ -40,8 +38,7 @@ public abstract class Player {
 	/**
 	 * Default Player constructor.
 	 */
-	public Player() {
-	}
+	public Player() {}
 	
 	/**
 	 * Set the row.

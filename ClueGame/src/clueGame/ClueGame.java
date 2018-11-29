@@ -73,6 +73,10 @@ public class ClueGame extends JPanel {
 		gui.accuse.addActionListener(new AccuseListener());
 	}
 	
+	public void setHumanPlayerTurn(boolean humanPlayerTurn) {
+		this.humanPlayerTurn = humanPlayerTurn;
+	}
+
 	/**
 	 * Gets the gui displaying Control Panel.
 	 * @return - ControlGUI object
@@ -111,7 +115,10 @@ public class ClueGame extends JPanel {
 	private class AccuseListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			accuseDialog.setVisible(true);
+			if (humanPlayerTurn && !accuseDialog.isSubmitted()) {
+				accuseDialog.setVisible(true);
+				repaint();
+			}
 		}
 	}
 	
@@ -235,8 +242,8 @@ public class ClueGame extends JPanel {
 					humanPlayerTurn = false;
 					repaint();
 				} else {
-					JFrame splashScreen = new JFrame();
-					JOptionPane.showMessageDialog(splashScreen, "You cannot go there", "Error" , JOptionPane.INFORMATION_MESSAGE);
+					JFrame infoScreen = new JFrame();
+					JOptionPane.showMessageDialog(infoScreen, "You cannot go there", "Error" , JOptionPane.INFORMATION_MESSAGE);
 				}
 				
 			}

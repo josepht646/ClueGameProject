@@ -61,8 +61,18 @@ public class AccuseDialog  extends JDialog {
 			if (submitted) {
 				if (board.checkAccusation(response)) {
 					JFrame winMessage = new JFrame();
-					JOptionPane.showMessageDialog(winMessage, "You guessed correctly and won the game!" , "You Win", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(winMessage, "You accused the correct person and won the game!" , "You Win", JOptionPane.INFORMATION_MESSAGE);
 					System.exit(0);
+				} else {
+					JFrame loseMessage = new JFrame();
+					JOptionPane.showMessageDialog(loseMessage, "You accused the wrong person and lost :(" , "Rip in Pepperoni", JOptionPane.INFORMATION_MESSAGE);
+					ClueGame.getInstance().setHumanPlayerTurn(false);
+					for (BoardCell cell : board.getTargets()) {
+						cell.setTarget(false);
+					}
+					board.getPlayers().remove(ClueGame.getInstance().getCurrentPlayer());
+					ClueGame.getInstance().setCurrentPlayer(ClueGame.getInstance().getCurrentPlayer() - 1);
+					Player.suggestionDisproven = true;
 				}
 			}
 		}

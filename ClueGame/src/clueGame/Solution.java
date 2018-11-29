@@ -22,4 +22,9 @@ public class Solution {
 		this.weapon = weapon;
 		
 	}
+	
+	@Override
+	public String toString() {
+		return person + " in the " + room + " with the " + weapon;
+	}
 }

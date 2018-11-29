@@ -63,11 +63,6 @@ public class ComputerPlayer extends Player {
 	 */
 	@Override
 	public BoardCell pickLocation(Set<BoardCell> targets) {
-		
-		if (!suggestionDisproven && checkCards(lastSuggestion) && getMyCards().size()+getSeenCards().size() >= 0.75*Board.getInstance().getCards().size()) {
-			//makeAccusation();
-			return null;
-		}
 		ArrayList<BoardCell> roomsToMoveTo = new ArrayList<BoardCell>();
 		for (BoardCell cell : targets) {
 			if (cell.isDoorway() && cell.getInitial() != lastRoom) {
@@ -95,12 +90,20 @@ public class ComputerPlayer extends Player {
 	 * In development.
 	 */
 	public Solution makeAccusation() {
-		return lastSuggestion;
+		if (!suggestionDisproven && checkCards(lastSuggestion)) {
+			return lastSuggestion;
+		}
+		return null;
 	}
 	
 	private boolean checkCards(Solution s) {
-		for (Card c: getMyCards()) {
-			if (c.getCardName() == s.person || c.getCardName() == s.weapon || c.getCardName() == s.room) {
+		for (Card c : getMyCards()) {
+			if (c.getCardName().equals(s.person) || c.getCardName().equals(s.weapon) || c.getCardName().equals(s.room)) {
+				return false;
+			}
+		}
+		for (Card c : getSeenCards()) {
+			if (c.getCardName().equals(s.person) || c.getCardName().equals(s.weapon) || c.getCardName().equals(s.room)) {
 				return false;
 			}
 		}
@@ -115,17 +118,29 @@ public class ComputerPlayer extends Player {
 		Board board = Board.getInstance();
 		ArrayList<Card> deck = board.getCards();
 		Collections.shuffle(deck);
-		Solution suggestion = new Solution("", board.getLegend().get(board.getCellAt(getRow(), getColumn()).getInitial()), "");
+		Solution suggestion = new Solution(null, board.getLegend().get(board.getCellAt(getRow(), getColumn()).getInitial()), null);
+		Card lastPerson = null, lastWeapon = null;
 		for (Card c : deck) {
-			if (!getMyCards().contains(c) && !getSeenCards().contains(c) && c.getType() != CardType.ROOM) {
-				if (c.getType() == CardType.PERSON && suggestion.person.equals("")) {
+			if (c.getType() == CardType.PERSON) {
+				lastPerson = c;
+			} else if (c.getType() == CardType.WEAPON) {
+				lastWeapon = c;
+			} else {
+				continue;
+			}
+			if (!getMyCards().contains(c) && !getSeenCards().contains(c)) {
+				if (c.getType() == CardType.PERSON && suggestion.person == null) {
 					suggestion.person = c.getCardName();
-				} else if (c.getType() == CardType.WEAPON && suggestion.weapon.equals("")) {
+				} else if (c.getType() == CardType.WEAPON && suggestion.weapon == null) {
 					suggestion.weapon = c.getCardName();
-				} else {
-					break;
 				}
 			}
+		}
+		if (suggestion.person == null) {
+			suggestion.person = lastPerson.getCardName();
+		}
+		if (suggestion.weapon == null) {
+			suggestion.weapon = lastWeapon.getCardName();
 		}
 		lastSuggestion = suggestion;
 		return suggestion;

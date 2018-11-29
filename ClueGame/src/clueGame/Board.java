@@ -382,7 +382,7 @@ public class Board extends JPanel {
 	 * @return - Card that disproves suggestion, or null.
 	 */
 	public Card handleSuggestion(Solution suggestion, Player accuser) {
-		ControlGUI.getInstance().setGuess(suggestion.person + " in the " + suggestion.room + " with the " + suggestion.weapon);
+		ControlGUI.getInstance().setGuess(suggestion.toString());
 		for (Player p : players) {
 			if (p.getPlayerName().equals(suggestion.person)) {
 				p.setRow(accuser.getRow());
@@ -395,6 +395,16 @@ public class Board extends JPanel {
 				if (c != null) {
 					ControlGUI.getInstance().setGuessResult(c.getCardName());
 					Player.suggestionDisproven = true;
+					boolean matchFound = false;
+					for (Card c2 : accuser.getSeenCards()) {
+						if (c2.getCardName().equals(c.getCardName())) {
+							matchFound = true;
+							break;
+						}
+					}
+					if (!matchFound) {
+						accuser.getSeenCards().add(c);
+					}
 					return c;
 				}
 			}
@@ -410,14 +420,7 @@ public class Board extends JPanel {
 	 * @return - True or False
 	 */
 	public boolean checkAccusation(Solution accusation) {
-		if ((accusation.person == theAnswer.person) && (accusation.room == theAnswer.room) && (accusation.weapon == theAnswer.weapon)) {
-			return true;
-		} else {
-			players.remove(ClueGame.getInstance().getCurrentPlayer());
-			ClueGame.getInstance().setCurrentPlayer(ClueGame.getInstance().getCurrentPlayer()-1);
-			Player.suggestionDisproven = true;
-			return false;
-		}
+		return (accusation.person == theAnswer.person) && (accusation.room == theAnswer.room) && (accusation.weapon == theAnswer.weapon);
 	}
 	
 	/**
@@ -562,20 +565,35 @@ public class Board extends JPanel {
 		ControlGUI.getInstance().setGuessResult("");
 		calcTargets(players.get(currentPlayer).getRow(), players.get(currentPlayer).getColumn(), roll);
 		BoardCell cellLocation = players.get(currentPlayer).pickLocation(getTargets());
-		if (players.get(currentPlayer) instanceof ComputerPlayer && cellLocation != null) {
-			players.get(currentPlayer).setRow(cellLocation.getRow());
-			players.get(currentPlayer).setColumn(cellLocation.getColumn());
-			if (cellLocation.isDoorway()) {
-				handleSuggestion(((ComputerPlayer) players.get(currentPlayer)).createSuggestion(), players.get(currentPlayer));
+		if (players.get(currentPlayer) instanceof ComputerPlayer) {
+			Solution accusation = ((ComputerPlayer) players.get(currentPlayer)).makeAccusation();
+			if (accusation != null) {
+				if (checkAccusation(accusation)) {
+					JFrame winMessage = new JFrame();
+					JOptionPane.showMessageDialog(winMessage, players.get(currentPlayer).getPlayerName() + " accused the correct person and won the game!" , "Another Player Won", JOptionPane.INFORMATION_MESSAGE);
+					System.exit(0);
+				} else {
+					JFrame loseMessage = new JFrame();
+					JOptionPane.showMessageDialog(loseMessage, players.get(currentPlayer).getPlayerName() + " accused the wrong person and lost :(" , "Rip", JOptionPane.INFORMATION_MESSAGE);
+					players.remove(ClueGame.getInstance().getCurrentPlayer());
+					ClueGame.getInstance().setCurrentPlayer(ClueGame.getInstance().getCurrentPlayer() - 1);
+					cellLocation = null;
+					Player.suggestionDisproven = true;
+					if (players.size() == 0) {
+						JFrame gameMessage = new JFrame();
+						JOptionPane.showMessageDialog(gameMessage, "The game is over, the murderer was " + theAnswer.toString(), "Game Over", JOptionPane.INFORMATION_MESSAGE);
+						System.exit(0);
+					}
+				}
 			}
-		} else if (players.get(currentPlayer) instanceof ComputerPlayer) {
-			if (checkAccusation(((ComputerPlayer) players.get(currentPlayer)).makeAccusation())) {
-				JFrame winMessage = new JFrame();
-				JOptionPane.showMessageDialog(winMessage, players.get(currentPlayer).getPlayerName() + " guessed correctly and won the game." , "Another Player Won", JOptionPane.INFORMATION_MESSAGE);
-				System.exit(0);
+			if (cellLocation != null) {
+				players.get(currentPlayer).setRow(cellLocation.getRow());
+				players.get(currentPlayer).setColumn(cellLocation.getColumn());
+				if (cellLocation.isDoorway()) {
+					handleSuggestion(((ComputerPlayer) players.get(currentPlayer)).createSuggestion(), players.get(currentPlayer));
+				}
 			}
 		}
-		
 	}
 	
 	/**
